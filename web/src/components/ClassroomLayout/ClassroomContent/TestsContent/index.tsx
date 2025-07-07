@@ -2,12 +2,14 @@ import { useState } from "react";
 import type { Test } from "../../../../utils";
 import {Box, Button, Grid, InputAdornment, Paper, styled, TextField, Typography} from "@mui/material";
 import {Add as AddIcon, Description as DescriptionIcon, Search as SearchIcon} from '@mui/icons-material';
+import { useOutletContext } from "react-router";
 
 interface TestsContentProps {
   tests: Test[]
 }
 
-export default function TestsContent({tests}: TestsContentProps) {
+export default function TestsContent() {
+  const { tests } = useOutletContext<TestsContentProps>();
   const [searchQuery, setSearchQuery] = useState('');
 
   // Handle search input change

@@ -2,10 +2,15 @@ import {Box, List, ListItemButton, ListItemIcon, ListItemText, Typography} from 
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import PeopleIcon from '@mui/icons-material/People';
-import { useState } from "react";
-import {MembersContent, OverviewContent, TestsContent} from "./ClassroomContent";
+import { Link, Outlet, useLocation} from 'react-router';
+import type {ReactNode} from "react";
 
-const ClassroomLayout = ({className}:{className: string}) => {
+interface ClassroomLayoutProps {
+  className: string;
+  children?: ReactNode;
+}
+
+const ClassroomLayout = ({ className }: ClassroomLayoutProps) => {
   const teacherName = "Trần Xuân Bảng";
   const members = [
     {id: 1, name: "Trần Xuân Bảng", role: "Giáo viên"},
@@ -21,24 +26,16 @@ const ClassroomLayout = ({className}:{className: string}) => {
     {id: 5, name: "Thu Thi 5", date: "22-04-2024 06:24:49"},
   ];
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const location = useLocation();
+  const pathname = location.pathname;
 
-  const handleListItemClick = (_: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => {
-    setSelectedIndex(index);
+  const getSelectedIndex = () => {
+    if (pathname.includes("/tests")) return 1;
+    if (pathname.includes("/members")) return 2;
+    return 0;
   };
 
-  const renderContent = () => {
-    switch (selectedIndex) {
-      case 0:
-        return <OverviewContent className={className} teacherName={teacherName} members={members} tests={tests}/>;
-      case 1:
-        return <TestsContent tests={tests}/>;
-      case 2:
-        return <MembersContent members={members}/>;
-      default:
-        return <OverviewContent className={className} teacherName={teacherName} members={members} tests={tests}/>;
-    }
-  }
+  const selectedIndex = getSelectedIndex();
 
   return (
     <Box sx={{
@@ -60,8 +57,9 @@ const ClassroomLayout = ({className}:{className: string}) => {
           aria-label="main mailbox folders"
           sx={{padding: 0}}>
           <ListItemButton
+            component={Link}
+            to="overview"
             selected={selectedIndex === 0}
-            onClick={(event) => handleListItemClick(event, 0)}
           >
             <ListItemIcon>
               <DashboardIcon color={selectedIndex === 0 ? 'primary' : 'action'}/>
@@ -70,11 +68,12 @@ const ClassroomLayout = ({className}:{className: string}) => {
               primary="Tổng quan"
               slotProps={{
                 primary: {color: selectedIndex === 0 ? 'primary' : 'action'}
-            }}/>
+              }}/>
           </ListItemButton>
           <ListItemButton
+            component={Link}
+            to="tests"
             selected={selectedIndex === 1}
-            onClick={(event) => handleListItemClick(event, 1)}
           >
             <ListItemIcon>
               <AssignmentIcon color={selectedIndex === 1 ? 'primary' : 'action'}/>
@@ -83,11 +82,12 @@ const ClassroomLayout = ({className}:{className: string}) => {
               primary="Bài thi"
               slotProps={{
                 primary: {color: selectedIndex === 1 ? 'primary' : 'action'}
-            }}/>
+              }}/>
           </ListItemButton>
           <ListItemButton
+            component={Link}
+            to="members"
             selected={selectedIndex === 2}
-            onClick={(event) => handleListItemClick(event, 2)}
           >
             <ListItemIcon>
               <PeopleIcon color={selectedIndex === 2 ? 'primary' : 'action'}/>
@@ -96,7 +96,7 @@ const ClassroomLayout = ({className}:{className: string}) => {
               primary="Thành viên"
               slotProps={{
                 primary: {color: selectedIndex === 2 ? 'primary' : 'action'}
-            }}/>
+              }}/>
           </ListItemButton>
         </List>
 
@@ -105,12 +105,10 @@ const ClassroomLayout = ({className}:{className: string}) => {
 
       {/* Main Content */}
       <Box component="main" sx={{flexGrow: 1, p: 3, overflowY: 'auto'}}>
-        {renderContent()}
+        <Outlet context={{ className, teacherName, members, tests }} />
       </Box>
-
     </Box>
   )
-
 }
 
 function CopyrightInfo(){

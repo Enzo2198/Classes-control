@@ -1,6 +1,6 @@
 services:
   web:
-    container_name: class-control-web
+    container_name: classes-control
     image: node:20.10.0
     working_dir: /app/web
     volumes:

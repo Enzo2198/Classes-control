@@ -17,3 +17,25 @@ export interface Test {
   name: string;
   date: string;
 }
+
+export interface FormData {
+  email: string;
+  password: string;
+}
+
+export interface FormErrors extends FormData {
+  form?: string;
+}
+
+
+export interface LoginResponse {
+  access: string;
+  refresh: string;
+}
+
+export interface ClassroomContextType {
+  teacherName: string,
+  className: string,
+  members: Member[] | any[],
+  tests: Test[] | any[]
+}

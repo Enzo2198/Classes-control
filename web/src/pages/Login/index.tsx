@@ -1,38 +1,104 @@
-import { useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 import { Box, Button, Checkbox, Stack, Typography, Paper, Link } from "@mui/material";
-import { NavLink } from "react-router";
+import {NavLink, useNavigate} from "react-router";
 import { FloatingInput } from "../../components";
+import {postMethod} from "../../utils";
+import {isLogin} from "./common.tsx";
+import type {FormData, FormErrors, LoginResponse} from "../../utils"
 
 export default function Login() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
   });
 
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<FormErrors>({
     email: "",
     password: "",
   });
+
+  const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
   const validateEmail = (email: string) =>
     /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const newFormData = { ...formData, [name]: value };
-    const newErrors = { ...errors };
+    setFormData(e => ({...e, [name]: value}))
 
     if (name === "email") {
-      newErrors.email = validateEmail(value) ? "" : "Email không hợp lệ.";
+      setErrors(e => ({
+        ...e,
+        email: validateEmail(value) ? "" : "Email không hợp lệ"
+      }));
     }
 
     if (name === "password") {
-      newErrors.password = value.length >= 8 ? "" : "Mật khẩu tối thiểu 8 ký tự.";
+      setErrors(e => ({
+        ...e,
+        password: value.length >= 8 ? "" : "Mật khẩu tối thiểu 8 ký tự."
+      }));
+    }
+  };
+
+  const handleLogin = async () => {
+    let isValid: boolean = true
+    const newErrors = { ...errors };
+
+    // Check value conditions
+    if (!validateEmail(formData.email)) {
+      newErrors.email = "Email không hợp lệ"
+      isValid = false
+    }
+    if (formData.password.length < 8) {
+      newErrors.password = "Mật khẩu tối thiểu 8 ký tự";
+      isValid = false;
     }
 
-    setFormData(newFormData);
-    setErrors(newErrors);
+    setErrors(newErrors)
+    if (!isValid) return
+
+    setIsLoading(true)
+    try {
+      // Call API
+      const response = await postMethod<LoginResponse>('login', {
+        email: formData.email,
+        password: formData.password
+      })
+      if (!response) throw new Error('Connect server failed')
+
+      // Save local storage
+      if (response?.access && response?.refresh) {
+        localStorage.setItem('access', response.access)
+        localStorage.setItem('refresh', response.refresh)
+
+        navigate('/classes')
+      } else {
+        throw new Error('Lỗi đăng nhập')
+      }
+
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setIsLoading(false)
+    }
   };
+
+  const isFormValid = useMemo(() => {
+    return (
+      validateEmail(formData.email) &&
+      formData.password.length >= 8 &&
+      !errors.email &&
+      !errors.password
+    )
+  }, [formData, errors])
+
+  useEffect(() => {
+    if (isLogin()) {
+      navigate('/classes')
+    }
+  }, [navigate])
 
   return (
     <Box
@@ -216,6 +282,7 @@ export default function Login() {
               color="primary"
               size="large"
               fullWidth
+              onClick={handleLogin}
               sx={{
                 height: "48px",
                 fontSize: "1rem",
@@ -226,8 +293,9 @@ export default function Login() {
                   background: '#1565c0'
                 }
               }}
+              disabled={isLoading || !isFormValid}
             >
-              Đăng nhập
+              {isLoading ? 'Đang đăng nhập' : 'Đăng nhập'}
             </Button>
           </Stack>
 

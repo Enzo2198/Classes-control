@@ -1,5 +1,6 @@
 import {Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material";
 import type {Member} from "../../../../utils";
+import {useOutletContext} from "react-router";
 
 interface MembersContentProps {
   members: Member[]
@@ -16,7 +17,8 @@ const headers: HeaderMember[] = [
   {name: 'position', text: 'VỊ TRÍ'}
 ]
 
-export default function MembersContent({members}: MembersContentProps) {
+export default function MembersContent() {
+  const { members } = useOutletContext<MembersContentProps>();
   return (
     <Box sx={{mt: 3}}>
       <Typography variant="h4" fontWeight="bold" sx={{mb: 2}}>

@@ -9,17 +9,17 @@ import {
 } from '@mui/icons-material';
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import PeopleIcon from "@mui/icons-material/People";
-import type { Member, Test } from "../../../../utils";
-// import {MembersContent} from "../index.ts";
+import type { Member, Test, ClassroomContextType } from "../../../../utils";
+import {useOutletContext} from "react-router";
 
-interface OverviewContentProps {
-  teacherName: string,
-  className: string,
-  members: Member[],
-  tests: Test[]
-}
+export default function OverviewContent() {
+  const context = useOutletContext<ClassroomContextType>();
 
-export default function OverviewContent({className, teacherName, members, tests}: OverviewContentProps) {
+  if (!context) {
+    return <div>Đang tải dữ liệu...</div>;
+  }
+
+  const { className, teacherName, members, tests } = context
   const Item = styled(Paper)(({theme}) => ({
     backgroundColor: '#fff',
     ...theme.typography.body2,

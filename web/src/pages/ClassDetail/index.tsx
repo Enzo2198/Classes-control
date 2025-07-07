@@ -1,15 +1,17 @@
-import {ClassroomLayout, GHeader} from "../../components";
-import {useLocation} from "react-router";
+import { ClassroomLayout, GHeader } from "../../components";
+import { useLocation, Outlet } from "react-router";
 
 
-export default () => {
+export default function ClassDetailLayout() {
   const location = useLocation();
   const className = location.state?.className || 'Không có tên lớp';
 
   return (
     <>
       <GHeader/>
-      <ClassroomLayout className={className}/>
+      <ClassroomLayout className={className}>
+        <Outlet />
+      </ClassroomLayout>
     </>
-  )
+  );
 }
