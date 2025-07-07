@@ -2,7 +2,7 @@ export interface Course {
   id: string;
   name: string;
   memberCount: number;
-  classCode: string;
+  code: string;
   themeColor?: string;
 }
 

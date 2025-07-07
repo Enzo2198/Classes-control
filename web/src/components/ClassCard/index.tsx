@@ -35,7 +35,7 @@ const CourseCard = ({course}: {course: Course}) => {
     >
       <Box sx={{p: 2, display: 'flex', flexDirection: 'column', flexGrow: 1}}>
         {/* Class name & Enter button */}
-        <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1}}>
+        <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 6}}>
 
           <Typography
             variant="h6"
@@ -107,7 +107,7 @@ const CourseCard = ({course}: {course: Course}) => {
               Thành viên tham gia
             </Typography>
             <Typography variant="body2" sx={{color: 'rgba(255, 255, 255, 0.9)'}}>
-              Mã lớp: {course.classCode}
+              Mã lớp: {course.code}
             </Typography>
           </Box>
 
