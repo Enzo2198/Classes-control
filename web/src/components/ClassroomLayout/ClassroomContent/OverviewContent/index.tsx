@@ -11,15 +11,12 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import PeopleIcon from "@mui/icons-material/People";
 import type { Member, Test, ClassroomContextType } from "../../../../utils";
 import {useOutletContext} from "react-router";
+import {useExams} from "../../examsProvider.tsx";
 
 export default function OverviewContent() {
-  const context = useOutletContext<ClassroomContextType>();
+  const { className, teacherName, members}  = useOutletContext<ClassroomContextType>();
+  const { exams } = useExams();
 
-  if (!context) {
-    return <div>Đang tải dữ liệu...</div>;
-  }
-
-  const { className, teacherName, members, tests } = context
   const Item = styled(Paper)(({theme}) => ({
     backgroundColor: '#fff',
     ...theme.typography.body2,
@@ -115,7 +112,7 @@ export default function OverviewContent() {
                   <Box sx={{display: 'flex', alignItems: 'center'}}>
                     <PeopleIcon sx={{color: '#3498db', mr: 2, fontSize: 48}}/>
                     <Typography variant="h5" fontWeight="medium">
-                      {tests.length} Bài Kiểm Tra
+                      {exams.length} Bài Kiểm Tra
                     </Typography>
                   </Box>
                 </Paper>
@@ -145,7 +142,7 @@ export default function OverviewContent() {
           </Typography>
 
           <List>
-            {tests.reverse().map((test: Test) => (
+            {exams.reverse().map((test: Test) => (
               <ListItem key={test.id} sx={{px: 0, py: 1}}>
                 <ListItemIcon sx={{minWidth: 40}}>
                   <Avatar
@@ -163,7 +160,7 @@ export default function OverviewContent() {
                     <Box component="span" sx={{display: 'flex', alignItems: 'center', mt: 0.5}}>
                       <ClockIcon sx={{fontSize: 14, mr: 0.5, color: 'text.secondary'}}/>
                       <Typography variant="caption" color="text.secondary">
-                        {test.date}
+                        {test.start_time}
                       </Typography>
                     </Box>
                   }

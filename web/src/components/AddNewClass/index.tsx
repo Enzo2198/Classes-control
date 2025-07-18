@@ -53,7 +53,10 @@ export default () => {
               mb: 1,
               color: 'text.primary'
             }}>
-              Tên lớp học*
+              Tên lớp học
+              <Box component="span" sx={{ color: 'error.main', ml: 0.5, fontSize: '1rem', verticalAlign: 'super' }}>
+                *
+              </Box>
             </Typography>
             <TextField
               fullWidth
@@ -71,7 +74,10 @@ export default () => {
               mb: 1,
               color: 'text.primary'
             }}>
-              Mã bảo vệ*
+              Mã bảo vệ
+              <Box component="span" sx={{ color: 'error.main', ml: 0.5, fontSize: '1rem', verticalAlign: 'super' }}>
+                *
+              </Box>
             </Typography>
             <TextField
               fullWidth

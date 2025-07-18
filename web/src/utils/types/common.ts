@@ -10,12 +10,13 @@ export interface Member {
   id: number;
   name: string;
   role: string;
+  status: string;
 }
 
 export interface Test {
   id: number;
   name: string;
-  date: string;
+  start_time: string;
 }
 
 export interface FormData {
@@ -37,5 +38,5 @@ export interface ClassroomContextType {
   teacherName: string,
   className: string,
   members: Member[] | any[],
-  tests: Test[] | any[]
+  exams: Test[] | any[]
 }

@@ -2,8 +2,10 @@ import {Box, List, ListItemButton, ListItemIcon, ListItemText, Typography} from 
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import PeopleIcon from '@mui/icons-material/People';
-import { Link, Outlet, useLocation} from 'react-router';
-import type {ReactNode} from "react";
+import {Link, Outlet, useLocation, useParams} from 'react-router-dom';
+import {type ReactNode, useEffect, useState} from "react";
+import {getMethod, type Member} from "../../utils";
+import {ExamsContext} from "./examsProvider.tsx"
 
 interface ClassroomLayoutProps {
   className: string;
@@ -11,26 +13,45 @@ interface ClassroomLayoutProps {
 }
 
 const ClassroomLayout = ({ className }: ClassroomLayoutProps) => {
+  const { id } = useParams<{ id: string }>();
   const teacherName = "Trần Xuân Bảng";
-  const members = [
-    {id: 1, name: "Trần Xuân Bảng", role: "Giáo viên"},
-    {id: 2, name: "Phạm Thùy Dương", role: "Học sinh"},
-    {id: 3, name: "bang", role: "Học sinh"},
-  ];
 
-  const tests = [
-    {id: 1, name: "ĐỀ THI LẦN 1", date: "23-01-2024 04:40:21"},
-    {id: 2, name: "Thi thu lan 2", date: "26-01-2024 10:59:23"},
-    {id: 3, name: "Thu Thu Lan 3", date: "28-01-2024 10:21:55"},
-    {id: 4, name: "Thi Thu 4", date: "30-01-2024 09:04:04"},
-    {id: 5, name: "Thu Thi 5", date: "22-04-2024 06:24:49"},
-  ];
+  // Get Members
+  const [members, setMembers] = useState<Member[]>([]);
+  useEffect(() => {
+    const getMembers = async () => {
+      try {
+        if (!id) return;
+        const response = await getMethod<{ users: Member[] }>(`master/class/${id}`);
+        if(response?.users) return setMembers(response.users);
+      } catch (error) {
+        console.error('Failed to fetch members:', error);
+      }
+    };
+    getMembers();
+  }, [id]);
+
+  // Get Exams
+  const [exams, setExams] = useState<any[]>([]);
+  const getExams = async () => {
+    try {
+      if (!id) return;
+      const response = await getMethod(`exam_group/?class_id=${id}`);
+      setExams(response as any[]);
+    } catch (error) {
+      console.error('Failed to fetch exams:', error);
+    }
+  };
+  useEffect(() => {
+    getExams();
+  }, [id]);
+
 
   const location = useLocation();
   const pathname = location.pathname;
 
   const getSelectedIndex = () => {
-    if (pathname.includes("/tests")) return 1;
+    if (pathname.includes("/exam")) return 1;
     if (pathname.includes("/members")) return 2;
     return 0;
   };
@@ -72,7 +93,7 @@ const ClassroomLayout = ({ className }: ClassroomLayoutProps) => {
           </ListItemButton>
           <ListItemButton
             component={Link}
-            to="tests"
+            to="exam"
             selected={selectedIndex === 1}
           >
             <ListItemIcon>
@@ -105,7 +126,9 @@ const ClassroomLayout = ({ className }: ClassroomLayoutProps) => {
 
       {/* Main Content */}
       <Box component="main" sx={{flexGrow: 1, p: 3, overflowY: 'auto'}}>
-        <Outlet context={{ className, teacherName, members, tests }} />
+        <ExamsContext.Provider value={{ exams, getExams }}>
+          <Outlet context={{ className, teacherName, members }} />
+        </ExamsContext.Provider>
       </Box>
     </Box>
   )

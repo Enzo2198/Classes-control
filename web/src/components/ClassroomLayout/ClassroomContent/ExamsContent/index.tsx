@@ -1,25 +1,26 @@
-import { useState } from "react";
+import {useState } from "react";
 import type { Test } from "../../../../utils";
 import {Box, Button, Grid, InputAdornment, Paper, styled, TextField, Typography} from "@mui/material";
 import {Add as AddIcon, Description as DescriptionIcon, Search as SearchIcon} from '@mui/icons-material';
-import { useOutletContext } from "react-router";
-
-interface TestsContentProps {
-  tests: Test[]
-}
+import dayjs from "dayjs";
+import DialogCreateExam from "./dialog.tsx";
+import {useExams} from "../../examsProvider.tsx";
+import {useNavigate} from "react-router";
+import {useParams} from "react-router-dom";
 
 export default function TestsContent() {
-  const { tests } = useOutletContext<TestsContentProps>();
+  const { exams } = useExams();
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Filter time exams
+  const now = dayjs();
+  const activeExams = exams.filter((exam) => dayjs(exam.start_time).isBefore(now, 'day'));
+  const pendingExams = exams.filter((exam) => dayjs(exam.start_time).isAfter(now, 'day'));
+
 
   // Handle search input change
   const handleSearchChange = (event: any) => {
     setSearchQuery(event.target.value);
-  };
-
-  // Handle create test button click
-  const handleCreateTest = () => {
-    console.log("Create new test");
   };
 
   const Item = styled(Paper)(({theme}) => ({
@@ -32,6 +33,49 @@ export default function TestsContent() {
       backgroundColor: '#1A2027',
     }),
   }));
+
+  const renderExamList = (examList: Test[]) => {
+    const navigate = useNavigate();
+    const { id } = useParams<{ id: string }>();
+
+    if (examList.length === 0) {
+      return <Typography color="text.secondary">0</Typography>;
+    }
+
+    return (
+      <Grid container spacing={2} alignItems="stretch">
+        {examList.map((test: Test) => (
+          <Grid size={{xs: 12, md: 6, lg: 4}} key={test.id} sx={{borderLeft: '5px solid #0A78D1', display: 'flex'}}>
+            <Item
+              sx={{ flex: 1, cursor: 'pointer' }}
+              onClick = {() => navigate(`/class/${id}/exam/${test.id}`)}
+            >
+              <Paper elevation={0} sx={{display: 'flex', alignItems: 'center', height: '100%'}}>
+                <Box
+                  sx={{display: 'flex', alignItems: 'flex-start', gap: '20px', p: 2, mr: 2}}
+                >
+                  <DescriptionIcon sx={{fontSize: 48, color: '#3498db'}}/>
+
+                  <Box>
+                    <Typography variant="body1" fontWeight="medium" textAlign="left" sx={{ mb: 1 }}>
+                      {test.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" textAlign="left" fontWeight="medium">
+                      Ngày bắt đầu:{" "}
+                      {test.start_time ? test.start_time.split(" ")[0] : "Chưa xác định"}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Paper>
+            </Item>
+          </Grid>
+        ))}
+      </Grid>
+    );
+  };
+
+  // Handle create test button click
+  const [open, setOpen] = useState(false);
 
   return (
     <Box sx={{p: 3, backgroundColor: '#f5f5f5', minHeight: '100vh'}}>
@@ -78,14 +122,14 @@ export default function TestsContent() {
             variant="contained"
             color="primary"
             startIcon={<AddIcon/>}
-            onClick={handleCreateTest}
+            onClick={() => setOpen(true)}
           >
             Tạo bài thi
           </Button>
         </Box>
       </Box>
 
-      {/* Active Tests Section */}
+      {/* Active Exams Section */}
       <Box sx={{mb: 4}}>
         <Typography
           variant="subtitle1"
@@ -93,59 +137,28 @@ export default function TestsContent() {
           color="primary"
           sx={{mb: 2}}
         >
-          Bài thi đang diễn ra
+          Bài thi đang diễn ra ({activeExams.length})
         </Typography>
 
-        <Grid container spacing={2}>
-          {tests.map((test: Test) => (
-            <Grid size={{xs: 12, md: 6, lg: 4}} key={test.id} sx={{borderLeft: '5px solid #0000ff'}}>
-              <Item>
-                <Paper elevation={0} sx={{borderRadius: 2}}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: '20px',
-                      p: 2,
-                      mr: 2
-                    }}
-                  >
-                    <DescriptionIcon
-                      sx={{
-                        fontSize: 48,
-                        color: '#3498db'
-                      }}
-                    />
-
-                    <Box>
-                      <Typography variant='body1' fontWeight="medium" textAlign="left" sx={{mb: 1}}>
-                        {test.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" fontWeight={'medium'}>
-                        Ngày bắt đầu: {test.date.split(' ')[0]}
-                      </Typography>
-                    </Box>
-                  </Box>
-
-                </Paper>
-              </Item>
-            </Grid>
-          ))}
-        </Grid>
+        {renderExamList(activeExams)}
       </Box>
 
-      {/* Pending Tests Section */}
-      <Box>
+      {/* Pending Exams Section */}
+      <Box sx={{mb: 4}}>
         <Typography
           variant="subtitle1"
           fontWeight="medium"
           color="primary"
           sx={{mb: 2}}
         >
-          Bài thi chưa bắt đầu
+          Bài thi chưa bắt đầu ({pendingExams.length})
         </Typography>
 
+        {renderExamList(pendingExams)}
       </Box>
+
+      {/* Dialog create exam */}
+      <DialogCreateExam open={open} onClose={() => setOpen(false)} onSubmit={() => {}} />
     </Box>
   );
 }
