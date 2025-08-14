@@ -15,6 +15,8 @@ import Divider from '@mui/material/Divider';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import {useState} from "react";
 import Typography from "@mui/material/Typography";
+import {logout} from "../../pages/Login/common.tsx";
+import {toast} from "react-toastify";
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -67,6 +69,10 @@ export default () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  }
+  const handleLogout = () => {
+    logout()
+    toast.success('Logouted')
   };
 
 
@@ -130,12 +136,12 @@ export default () => {
               open={open}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose} disableRipple>
+              <MenuItem disableRipple>
                 <PermIdentityIcon />
                 Thông tin cá nhân
               </MenuItem>
               <Divider sx={{ my: 0.5 }} />
-              <MenuItem onClick={handleClose} disableRipple>
+              <MenuItem onClick={handleLogout} disableRipple>
                 <LogoutIcon />
                 Đăng xuất
               </MenuItem>
