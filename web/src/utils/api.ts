@@ -1,9 +1,5 @@
-import api from '../plugins/api.ts'
-import { toast } from "react-toastify";
-import {isAxiosError} from "axios";
-
-const showSuccessMsg = (action = 'Save') => toast.success(`${action} successfully!`)
-const showErrorMsg = (action = 'Save') => toast.error(`${action} failed!`)
+import { api } from '../plugins/api.ts'
+import { isAxiosError } from "axios";
 
 export const getNewToken = async () => {
   const refresh = localStorage.getItem('refresh')
@@ -34,11 +30,9 @@ export const getMethod = async <T>(endpoint: string): Promise<T | null> => {
 export const postMethod = async <T>(endpoint: string, payload: unknown): Promise<T | null> => {
   try {
     const { data } = await api.post<T>(endpoint, payload)
-    showSuccessMsg()
     return data
   } catch (e) {
     console.error('POST error:', e)
-    showErrorMsg()
     return null
   }
 }
@@ -46,11 +40,9 @@ export const postMethod = async <T>(endpoint: string, payload: unknown): Promise
 export const putMethod = async <T>(endpoint: string, payload: unknown): Promise<T | null> => {
   try {
     const { data } = await api.put<T>(endpoint, payload)
-    showSuccessMsg('Update')
     return data
   } catch (e) {
     console.error('PUT error:', e)
-    showErrorMsg('Update')
     return null
   }
 }
@@ -58,11 +50,9 @@ export const putMethod = async <T>(endpoint: string, payload: unknown): Promise<
 export const deleteMethod = async <T>(endpoint: string): Promise<T | null> => {
   try {
     const { data } = await api.delete<T>(endpoint)
-    showSuccessMsg('Delete')
     return data
   } catch (e) {
     console.error('DELETE error:', e)
-    showErrorMsg('Delete')
     return null
   }
 }

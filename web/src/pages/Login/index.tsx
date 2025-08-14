@@ -5,6 +5,7 @@ import { FloatingInput } from "../../components";
 import {postMethod} from "../../utils";
 import {isLogin} from "./common.tsx";
 import type {FormData, FormErrors, LoginResponse} from "../../utils"
+import {toast} from "react-toastify";
 
 export default function Login() {
   const [formData, setFormData] = useState<FormData>({
@@ -66,16 +67,18 @@ export default function Login() {
         email: formData.email,
         password: formData.password
       })
-      if (!response) throw new Error('Connect server failed')
+      if (!response) toast.error('Connect server failed')
 
       // Save local storage
       if (response?.access && response?.refresh) {
         localStorage.setItem('access', response.access)
         localStorage.setItem('refresh', response.refresh)
 
+        toast.success('Login successfully')
+
         navigate('/classes')
       } else {
-        throw new Error('Lỗi đăng nhập')
+        toast.error('Login failed')
       }
 
     } catch (e) {
