@@ -6,6 +6,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import {postMethod} from "../../../../utils";
 import {useParams} from "react-router-dom";
 import {useExams} from "../../examsProvider.tsx";
+import {RequiredMark} from "../../../index.tsx";
 
 interface ExamFormDialogProps {
   open: boolean;
@@ -117,9 +118,7 @@ export default function DialogCreateExam({open, onClose, onSubmit, initialData, 
             color: 'text.primary'
           }}>
             Tên bài thi
-            <Box component="span" sx={{ color: 'error.main', ml: 0.5, fontSize: '1rem', verticalAlign: 'super' }}>
-              *
-            </Box>
+            <RequiredMark/>
           </Typography>
           <TextField
             size="small"
@@ -139,9 +138,7 @@ export default function DialogCreateExam({open, onClose, onSubmit, initialData, 
             color: 'text.primary'
           }}>
             Thời gian giữa các bài thi(phút)
-            <Box component="span" sx={{ color: 'error.main', ml: 0.5, fontSize: '1rem', verticalAlign: 'super' }}>
-              *
-            </Box>
+            <RequiredMark/>
           </Typography>
           <TextField
             size="small"
@@ -162,9 +159,7 @@ export default function DialogCreateExam({open, onClose, onSubmit, initialData, 
             color: 'text.primary'
           }}>
             Thời gian bắt đầu
-            <Box component="span" sx={{ color: 'error.main', ml: 0.5, fontSize: '1rem', verticalAlign: 'super' }}>
-              *
-            </Box>
+            <RequiredMark/>
           </Typography>
           <DatePicker
             label="mm/dd/yyyy"

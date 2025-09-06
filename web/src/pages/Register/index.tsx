@@ -1,7 +1,38 @@
-import { useState } from "react";
-import {Box, Button, Typography, Paper, Link, Stack, FormControl, FormLabel, TextField, IconButton, InputAdornment} from "@mui/material";
-import { NavLink } from "react-router";
+import {useState} from "react";
+import {
+  Box,
+  Button,
+  Typography,
+  Paper,
+  Link,
+  Stack,
+  FormControl,
+  FormLabel,
+  TextField,
+  IconButton,
+  InputAdornment,
+  MenuItem
+} from "@mui/material";
+import {NavLink, useNavigate} from "react-router";
 import {LuEye, LuEyeOff} from "react-icons/lu";
+import {RequiredMark} from "../../components";
+import {postMethod} from "../../utils";
+import {toast} from "react-toastify";
+
+const role = [
+  {
+    value: 'student',
+    label: 'Student',
+  },
+  {
+    value: 'teacher',
+    label: 'Teacher',
+  },
+  {
+    value: 'admin',
+    label: 'Admin',
+  },
+];
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -9,6 +40,7 @@ export default function Register() {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "",
   });
 
   const [errors, setErrors] = useState({
@@ -27,15 +59,16 @@ export default function Register() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate()
 
   const validateEmail = (email: string) =>
     /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
 
-    const newFormData = { ...formData, [name]: value };
-    const newErrors = { ...errors };
+    const newFormData = {...formData, [name]: value};
+    const newErrors = {...errors};
 
     if (name === "name") {
       newErrors.name = value ? "" : "Vui lòng nhập tên.";
@@ -61,21 +94,42 @@ export default function Register() {
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const { name } = e.target;
-    setTouched({ ...touched, [name]: true });
+    const {name} = e.target;
+    setTouched({...touched, [name]: true});
 
     // Validate field when blur
     if (name === "name" && !formData.name) {
-      setErrors({ ...errors, name: "Vui lòng nhập tên." });
+      setErrors({...errors, name: "Vui lòng nhập tên."});
     }
   };
+
+  const CreateUser = async () => {
+    try {
+      const response = await postMethod('/master/user/', {
+        name: formData.name,
+        email: formData.email,
+        role: formData.role,
+        status: "confirming",
+        password: formData.password,
+      })
+
+      if(response) {
+        toast.success('Đăng ký thành công')
+      } else {
+        toast.error('Đăng ký thất bại')
+      }
+
+      navigate('/login')
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   return (
     <Box
       sx={{
         background: "#f8f9fb",
         width: "100vw",
-        height: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -90,9 +144,11 @@ export default function Register() {
         }}
       >
         <Box textAlign="center" mb={4}>
-          <Typography component="span" variant="h3" fontWeight="bold" sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Box component="span" sx={{ mr: 2 }}>
-              <img src="https://bk-exam-public.s3.ap-southeast-1.amazonaws.com/logo2.png" alt="logo" width="40" height="40" />
+          <Typography component="span" variant="h3" fontWeight="bold"
+                      sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+            <Box component="span" sx={{mr: 2}}>
+              <img src="https://bk-exam-public.s3.ap-southeast-1.amazonaws.com/logo2.png" alt="logo"
+                   width="40" height="40"/>
             </Box>
             <Typography component="span" color="primary.main" pr="6px" fontSize={'inherit'}>
               BK
@@ -108,50 +164,53 @@ export default function Register() {
 
         <Stack spacing={3} width="100%">
           <FormControl>
-            <FormLabel sx={{ fontWeight: "bold", fontSize: "16px", color: "black" }}>
+            <FormLabel sx={{fontWeight: "bold", fontSize: "16px", color: "black"}}>
               Tên của bạn
+              <RequiredMark/>
             </FormLabel>
             <TextField
-              label="Nhập tên của bạn *"
+              label="Nhập tên của bạn"
               name="name"
               value={formData.name}
               onChange={handleChange}
               onBlur={handleBlur}
               error={!!errors.name && (touched.name || !!formData.name)}
               helperText={(touched.name || !!formData.name) ? errors.name : ""}
-              sx={{ mt: 2 }}
+              sx={{mt: 2}}
             />
           </FormControl>
 
           <FormControl>
-            <FormLabel sx={{ fontWeight: "bold", fontSize: "16px", color: "black" }}>
+            <FormLabel sx={{fontWeight: "bold", fontSize: "16px", color: "black"}}>
               Địa chỉ email
+              <RequiredMark/>
             </FormLabel>
             <TextField
-              label="Nhập địa chỉ email *"
+              label="Nhập địa chỉ email"
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               error={!!errors.email}
               helperText={errors.email}
-              sx={{ mt: 2 }}
+              sx={{mt: 2}}
             />
           </FormControl>
 
           <FormControl>
-            <FormLabel sx={{ fontWeight: "bold", fontSize: "16px", color: "black" }}>
+            <FormLabel sx={{fontWeight: "bold", fontSize: "16px", color: "black"}}>
               Mật khẩu
+              <RequiredMark/>
             </FormLabel>
             <TextField
-              label="Nhập mật khẩu *"
+              label="Nhập mật khẩu"
               type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleChange}
               error={!!errors.password}
               helperText={errors.password}
-              sx={{ mt: 2 }}
+              sx={{mt: 2}}
               slotProps={{
                 input: {
                   endAdornment: (
@@ -161,7 +220,7 @@ export default function Register() {
                         onClick={() => setShowPassword(!showPassword)}
                         edge="end"
                       >
-                        {showPassword ? <LuEyeOff /> : <LuEye />}
+                        {showPassword ? <LuEyeOff/> : <LuEye/>}
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -171,18 +230,19 @@ export default function Register() {
           </FormControl>
 
           <FormControl>
-            <FormLabel sx={{ fontWeight: "bold", fontSize: "16px", color: "black" }}>
+            <FormLabel sx={{fontWeight: "bold", fontSize: "16px", color: "black"}}>
               Nhập lại mật khẩu
+              <RequiredMark/>
             </FormLabel>
             <TextField
-              label="Nhập lại mật khẩu *"
+              label="Nhập lại mật khẩu"
               type={showConfirmPassword ? "text" : "password"}
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
               error={!!errors.confirmPassword}
               helperText={errors.confirmPassword}
-              sx={{ mt: 2 }}
+              sx={{mt: 2}}
               slotProps={{
                 input: {
                   endAdornment: (
@@ -192,13 +252,31 @@ export default function Register() {
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                         edge="end"
                       >
-                        {showConfirmPassword ? <LuEyeOff /> : <LuEye />}
+                        {showConfirmPassword ? <LuEyeOff/> : <LuEye/>}
                       </IconButton>
                     </InputAdornment>
                   ),
                 }
               }}
             />
+          </FormControl>
+
+          <FormControl>
+            <TextField
+              id="outlined-select-currency"
+              select
+              label="Bạn là"
+              defaultValue="student"
+              name="role"
+              onChange={handleChange}
+              helperText="Lựa chọn vai trò của bạn"
+            >
+              {role.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
           </FormControl>
 
           <Stack direction="row" justifyContent="center" spacing={6} pt={4}>
@@ -224,6 +302,7 @@ export default function Register() {
 
             <Button
               variant="contained"
+              onClick={CreateUser}
               sx={{
                 background: "primary.main",
                 color: "white",

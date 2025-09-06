@@ -1,4 +1,4 @@
-import { GHeader } from "../index.tsx";
+import {GHeader, RequiredMark} from "../index.tsx";
 import { Box, Container, Typography, TextField, Button, Paper, Divider } from "@mui/material";
 import {useState} from "react";
 import {postMethod} from "../../utils";
@@ -54,9 +54,7 @@ export default () => {
               color: 'text.primary'
             }}>
               Tên lớp học
-              <Box component="span" sx={{ color: 'error.main', ml: 0.5, fontSize: '1rem', verticalAlign: 'super' }}>
-                *
-              </Box>
+              <RequiredMark/>
             </Typography>
             <TextField
               fullWidth
@@ -75,9 +73,7 @@ export default () => {
               color: 'text.primary'
             }}>
               Mã bảo vệ
-              <Box component="span" sx={{ color: 'error.main', ml: 0.5, fontSize: '1rem', verticalAlign: 'super' }}>
-                *
-              </Box>
+              <RequiredMark/>
             </Typography>
             <TextField
               fullWidth
@@ -94,6 +90,7 @@ export default () => {
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
             <Button
               variant="outlined"
+              onClick={() => navigate('/classes')}
               sx={{
                 px: 3,
                 py: 1,
