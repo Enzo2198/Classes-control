@@ -1,61 +1,9 @@
-import {Container, Box, Typography, CircularProgress} from "@mui/material";
-import {ClassControl, GHeader, ClassGrid} from "../../components";
-import {type Course, getMethod} from "../../utils";
-import {useNavigate} from "react-router";
-import {useEffect, useState} from "react";
-import {isLogin} from "../Login/common.tsx";
+import { Container, Box, Typography, CircularProgress } from "@mui/material";
+import { ClassControl, GHeader, ClassGrid } from "../../components";
+import { useClassListPage } from "./classes.tsx";
 
-const mockCourses: Course[] = [];
-
-const classListPage = () => {
-  const [courses, setCourses] = useState<Course[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    let isMounted = true
-
-    const fetchData = async () => {
-      if (!isLogin()) {
-        navigate('/login')
-        return
-      }
-      try {
-        if (isMounted) setLoading(true)
-
-        const data = await getMethod<Course[]>('/master/class/')
-
-        if (!isMounted) return
-
-        if (!data) {
-          setError('Load data thất bại')
-          setCourses(mockCourses)
-          return;
-        }
-
-        setCourses(data);
-        setError(null);
-      } catch (e) {
-        if (!isMounted) return
-
-        setError('Không thể tải danh sách lớp học');
-        setCourses(mockCourses);
-        console.error(e);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    }
-    fetchData()
-
-    return () => {
-      isMounted = false
-    };
-  }, [navigate])
-
-  const toAddCourseClick = () => {
-    navigate('/class/add');
-  }
+export default function classListPage(){
+  const { courses, loading, error, toAddCourseClick } = useClassListPage()
 
   if (loading) {
     return (
@@ -106,5 +54,3 @@ const classListPage = () => {
     </>
   )
 }
-
-export default classListPage

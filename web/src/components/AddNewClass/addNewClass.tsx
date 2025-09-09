@@ -1,0 +1,31 @@
+import {useState} from "react";
+import {postMethod} from "../../utils";
+import {useNavigate} from "react-router";
+import {toast} from "react-toastify";
+
+export function useAddNewClass() {
+  const [className, setClassName] = useState("")
+  const [classCode, setClassCode] = useState("")
+  const navigate = useNavigate();
+
+  const toCreateClass = async () => {
+    try {
+      const response = await postMethod('/master/class/', {
+        name: className,
+        code: classCode,
+        users: [2]
+      })
+      if (!response) {
+        console.error('Connect server failed')
+        toast.error('Tạo lớp thất bại')
+      }
+
+      toast.success('Tạo lớp thành công')
+      navigate('/classes')
+    } catch (e) {
+      console.error(e)
+    }
+  };
+
+  return { className, setClassName, classCode, setClassCode, toCreateClass };
+}

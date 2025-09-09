@@ -1,19 +1,11 @@
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import ShareIcon from '@mui/icons-material/Share';
 import type {Course} from '../../utils';
-import {useNavigate} from 'react-router';
-import {Box, Button, Card, Typography} from "@mui/material";
+import { Box, Button, Card, Typography } from "@mui/material";
+import { useClassCard } from "./classCard.tsx";
 
-const CourseCard = ({course}: {course: Course}) => {
-  const navigate = useNavigate();
-
-  const onEnterClass = (course: Course) => {
-    navigate(`/class/${course.id}`, {
-      state: {
-        className: course.name
-      }
-    });
-  };
+export default function CourseCard({course}: { course: Course }) {
+  const { onEnterClass } = useClassCard()
 
   const cardBackgroundColor = course.themeColor || '#29b6f6';
   return (
@@ -58,7 +50,7 @@ const CourseCard = ({course}: {course: Course}) => {
           <Button
             size="small"
             startIcon={<MeetingRoomIcon/>}
-            onClick={()=>onEnterClass(course)}
+            onClick={() => onEnterClass(course)}
             sx={{
               color: 'white',
               textTransform: 'none',
@@ -132,9 +124,6 @@ const CourseCard = ({course}: {course: Course}) => {
           </Button>
         </Box>
       </Box>
-
     </Card>
   );
 };
-
-export default CourseCard;

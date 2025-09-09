@@ -1,32 +1,15 @@
 import {GHeader, RequiredMark} from "../index.tsx";
-import { Box, Container, Typography, TextField, Button, Paper, Divider } from "@mui/material";
-import {useState} from "react";
-import {postMethod} from "../../utils";
+import {Box, Container, Typography, TextField, Button, Paper, Divider} from "@mui/material";
+import {useAddNewClass} from "./addNewClass.tsx";
 import {useNavigate} from "react-router";
 
 export default () => {
-  const [className, setClassName] = useState("")
-  const [classCode, setClassCode] = useState("")
-  const navigate = useNavigate()
-
-  const toCreateClass = async () => {
-    try {
-      const response = await postMethod('/master/class/', {
-        name: className,
-        code: classCode,
-        users: [2]
-      })
-      if (!response) throw new Error('Connect server failed')
-
-      navigate('/classes')
-    } catch (e) {
-      console.error(e)
-    }
-  };
+  const { className, setClassName, classCode, setClassCode, toCreateClass } = useAddNewClass()
+  const navigate = useNavigate();
 
   return (
     <>
-      <GHeader />
+      <GHeader/>
       <Container
         maxWidth={false}
         sx={{
@@ -38,7 +21,7 @@ export default () => {
           p: 3
         }}
       >
-        <Paper elevation={3} sx={{ p: 4, maxWidth: 600, width: "100%" }}>
+        <Paper elevation={3} sx={{p: 4, maxWidth: 600, width: "100%"}}>
           <Typography variant="h5" component="h1" gutterBottom sx={{
             fontWeight: 'bold',
             mb: 3,
@@ -47,7 +30,7 @@ export default () => {
             Thêm lớp học mới
           </Typography>
 
-          <Box sx={{ mb: 4 }}>
+          <Box sx={{mb: 4}}>
             <Typography variant="subtitle1" sx={{
               fontWeight: 'bold',
               mb: 1,
@@ -62,11 +45,11 @@ export default () => {
               value={className}
               onChange={(e) => setClassName(e.target.value)}
               required
-              sx={{ backgroundColor: 'white' }}
+              sx={{backgroundColor: 'white'}}
             />
           </Box>
 
-          <Box sx={{ mb: 4 }}>
+          <Box sx={{mb: 4}}>
             <Typography variant="subtitle1" sx={{
               fontWeight: 'bold',
               mb: 1,
@@ -81,13 +64,13 @@ export default () => {
               value={classCode}
               onChange={(e) => setClassCode(e.target.value)}
               required
-              sx={{ backgroundColor: 'white' }}
+              sx={{backgroundColor: 'white'}}
             />
           </Box>
 
-          <Divider sx={{ my: 3 }} />
+          <Divider sx={{my: 3}}/>
 
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+          <Box sx={{display: 'flex', justifyContent: 'flex-end', gap: 2}}>
             <Button
               variant="outlined"
               onClick={() => navigate('/classes')}

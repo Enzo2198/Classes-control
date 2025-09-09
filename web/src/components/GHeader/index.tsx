@@ -13,10 +13,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Divider from '@mui/material/Divider';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
-import {useState} from "react";
 import Typography from "@mui/material/Typography";
-import {logout} from "../../pages/Login/common.tsx";
-import {toast} from "react-toastify";
+import {useNavigate} from "react-router";
+import {useClassListPage} from "../../pages/Classes/classes.tsx";
+import {useHeader} from "./header.tsx";
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -62,19 +62,9 @@ const StyledMenu = styled((props: MenuProps) => (
 }));
 
 export default () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  }
-  const handleLogout = () => {
-    logout()
-    toast.success('Logouted')
-  };
-
+  const navigate = useNavigate();
+  const { toAddCourseClick } = useClassListPage()
+  const { anchorEl, open, handleClose, handleLogout, handleClick } = useHeader()
 
   return (
     <>
@@ -93,8 +83,23 @@ export default () => {
         </Box>
 
         <Stack  direction="row" spacing={2}>
-          <Button sx={{fontWeight: 700}} variant="outlined"  startIcon={<AddIcon/>}>Tạo lớp</Button>
-          <Button sx={{fontWeight: 700}} variant="text" startIcon={<HomeIcon/>}>Trang chủ</Button>
+          <Button
+            sx={{fontWeight: 700}}
+            variant="outlined"
+            startIcon={<AddIcon/>}
+            onClick={toAddCourseClick}
+          >
+            Tạo lớp
+          </Button>
+          <Button
+              sx={{fontWeight: 700}}
+              onClick={() => navigate('/classes')}
+              variant="text"
+              startIcon={<HomeIcon/>}
+          >
+              Trang chủ
+
+          </Button>
 
           <Box sx={{flexGrow: 0, ml: 2, display: 'flex', alignItems: 'center'}}>
 

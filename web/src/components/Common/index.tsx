@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import { memo } from "react";
 
-
-const RequiredMark = () => {
+// Star required
+export const RequiredMark = memo(() => {
   return (
     <Box
       component="span"
@@ -16,5 +16,4 @@ const RequiredMark = () => {
       *
     </Box>
   )
-}
-export default memo(RequiredMark)
+})
