@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router";
-import { validateEmail, validatePassword } from "../../components";
-import { postMethod } from "../../utils";
-import { isLogin } from "./common.tsx";
-import type { FormData, FormErrors, LoginResponse } from "../../utils"
-import { toast } from "react-toastify";
+import {useEffect, useMemo, useState} from "react";
+import {useNavigate} from "react-router";
+import {validateEmail, validatePassword} from "../../components";
+import {postMethod} from "../../utils";
+import {isLogin} from "./common.tsx";
+import type {FormData, FormErrors, LoginResponse} from "../../utils"
+import {toast} from "react-toastify";
+import {useUser} from "../../plugins/user.ts";
 
 export function useLogin() {
   const [formData, setFormData] = useState<FormData>({
@@ -69,15 +70,13 @@ export function useLogin() {
         return
       }
 
-      // Save local storage
-      if (response?.access && response?.refresh) {
-        localStorage.setItem('access', response.access)
-        localStorage.setItem('refresh', response.refresh)
+      // Save storage
+      useUser.getState().setAuth({
+        accessToken: response.access,
+        refreshToken: response.refresh
+      })
 
-        navigate('/classes')
-      } else {
-        toast.error('Login failed')
-      }
+      navigate('/classes')
 
     } catch (e) {
       console.error(e)
@@ -102,5 +101,5 @@ export function useLogin() {
     }
   }, [navigate])
 
-  return { formData, errors, isLoading, isFormValid, handleChange, handleLogin }
+  return {formData, errors, isLoading, isFormValid, handleChange, handleLogin}
 }

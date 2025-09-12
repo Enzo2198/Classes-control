@@ -1,28 +1,11 @@
 import { api } from '../plugins/api.ts'
-import { isAxiosError } from "axios";
-
-export const getNewToken = async () => {
-  const refresh = localStorage.getItem('refresh')
-  if (!refresh) throw new Error('No refresh token')
-
-  try {
-    const { data } = await api.post('/login/get_new_token/', { refresh })
-    return data
-  } catch (e) {
-    throw new Error('Failed to refresh token')
-  }
-}
 
 export const getMethod = async <T>(endpoint: string): Promise<T | null> => {
   try {
     const { data } = await api.get<T>(endpoint);
     return data;
   } catch (e) {
-    if (isAxiosError(e) && e.response?.status === 401) {
-      await getNewToken();
-      const { data } = await api.get<T>(endpoint);
-      return data;
-    }
+    console.error('GET error', e)
     return null;
   }
 };

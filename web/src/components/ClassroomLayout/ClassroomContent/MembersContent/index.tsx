@@ -19,7 +19,6 @@ const headers: HeaderMember[] = [
 
 export default function MembersContent() {
   const { members } = useOutletContext<MembersContentProps>();
-  console.log(members);
   return (
     <Box sx={{mt: 3}}>
       <Typography variant="h4" fontWeight="bold" sx={{mb: 2}}>
