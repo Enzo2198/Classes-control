@@ -5,7 +5,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 import Stack from '@mui/material/Stack';
-import {Button, Box, Menu, MenuItem, type MenuProps, styled, alpha, Avatar} from "@mui/material"
+import {Button, Box, Menu, MenuItem, type MenuProps, styled, alpha} from "@mui/material"
 
 import AddIcon from '@mui/icons-material/Add';
 import HomeIcon from '@mui/icons-material/Home';
@@ -17,6 +17,8 @@ import Typography from "@mui/material/Typography";
 import {useNavigate} from "react-router";
 import {useClassListPage} from "../../pages/Classes/classes.tsx";
 import {useHeader} from "./header.tsx";
+import {useUser} from "../../plugins/user.ts";
+import {AvatarDefault} from "../index.tsx";
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -31,7 +33,7 @@ const StyledMenu = styled((props: MenuProps) => (
     }}
     {...props}
   />
-))(({ theme }) => ({
+))(({theme}) => ({
   '& .MuiPaper-root': {
     borderRadius: 6,
     marginTop: theme.spacing(1),
@@ -61,10 +63,12 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
+
 export default () => {
   const navigate = useNavigate();
-  const { toAddCourseClick } = useClassListPage()
-  const { anchorEl, open, handleClose, handleLogout, handleClick } = useHeader()
+  const {toAddCourseClick} = useClassListPage()
+  const {anchorEl, open, handleClose, handleLogout, handleClick} = useHeader()
+  const {user} = useUser();
 
   return (
     <>
@@ -82,7 +86,7 @@ export default () => {
           </Box>
         </Box>
 
-        <Stack  direction="row" spacing={2}>
+        <Stack direction="row" spacing={2}>
           <Button
             sx={{fontWeight: 700}}
             variant="outlined"
@@ -92,12 +96,12 @@ export default () => {
             Tạo lớp
           </Button>
           <Button
-              sx={{fontWeight: 700}}
-              onClick={() => navigate('/classes')}
-              variant="text"
-              startIcon={<HomeIcon/>}
+            sx={{fontWeight: 700}}
+            onClick={() => navigate('/classes')}
+            variant="text"
+            startIcon={<HomeIcon/>}
           >
-              Trang chủ
+            Trang chủ
 
           </Button>
 
@@ -119,20 +123,17 @@ export default () => {
                 gap: 1,
               }}
             >
-              <Avatar
-                alt="Trần Xuân Bằng"
-                src="https://i.pravatar.cc/40?u=tranxuanbang"
-                sx={{ width: 36, height: 36 }}
-              />
-              <Box sx={{ textAlign: 'left' }}>
-                <Typography sx={{ fontWeight: 500, color: '#5f6368' }}>
-                  Trần Xuân Bảng
+              <AvatarDefault user={user} width={36} height={36} />
+
+              <Box sx={{textAlign: 'left'}}>
+                <Typography sx={{fontWeight: 500, color: '#5f6368'}}>
+                  {user?.name}
                 </Typography>
-                <Typography variant="caption" sx={{ color: '#5f6368' }}>
-                  Giáo viên
+                <Typography variant="caption" sx={{color: '#5f6368'}}>
+                  {user?.role}
                 </Typography>
               </Box>
-              <KeyboardArrowDownIcon sx={{ color: '#5f6368', ml: 1 }} />
+              <KeyboardArrowDownIcon sx={{color: '#5f6368', ml: 1}}/>
             </Button>
 
             <StyledMenu
@@ -142,12 +143,12 @@ export default () => {
               onClose={handleClose}
             >
               <MenuItem disableRipple>
-                <PermIdentityIcon />
+                <PermIdentityIcon/>
                 Thông tin cá nhân
               </MenuItem>
-              <Divider sx={{ my: 0.5 }} />
+              <Divider sx={{my: 0.5}}/>
               <MenuItem onClick={handleLogout} disableRipple>
-                <LogoutIcon />
+                <LogoutIcon/>
                 Đăng xuất
               </MenuItem>
             </StyledMenu>

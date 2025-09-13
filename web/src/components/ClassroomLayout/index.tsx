@@ -2,61 +2,18 @@ import {Box, List, ListItemButton, ListItemIcon, ListItemText, Typography} from 
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import PeopleIcon from '@mui/icons-material/People';
-import {Link, Outlet, useLocation, useParams} from 'react-router-dom';
-import {type ReactNode, useEffect, useState} from "react";
-import {getMethod, type Member} from "../../utils";
+import {Link, Outlet} from 'react-router-dom';
 import {ExamsContext} from "./examsProvider.tsx"
+import {useClassroomLayout} from "./classroomLayout.tsx";
+import type {ReactNode} from "react";
 
-interface ClassroomLayoutProps {
+export interface ClassroomLayoutProps {
   className: string;
   children?: ReactNode;
 }
 
-const ClassroomLayout = ({ className }: ClassroomLayoutProps) => {
-  const { id } = useParams<{ id: string }>();
-  const teacherName = "Trần Xuân Bảng";
-
-  // Get Members
-  const [members, setMembers] = useState<Member[]>([]);
-  useEffect(() => {
-    const getMembers = async () => {
-      try {
-        if (!id) return;
-        const response = await getMethod<{ users: Member[] }>(`master/class/${id}`);
-        if(response?.users) return setMembers(response.users);
-      } catch (error) {
-        console.error('Failed to fetch members:', error);
-      }
-    };
-    getMembers();
-  }, [id]);
-
-  // Get Exams
-  const [exams, setExams] = useState<any[]>([]);
-  const getExams = async () => {
-    try {
-      if (!id) return;
-      const response = await getMethod(`exam_group/?class_id=${id}`);
-      setExams(response as any[]);
-    } catch (error) {
-      console.error('Failed to fetch exams:', error);
-    }
-  };
-  useEffect(() => {
-    getExams();
-  }, [id]);
-
-
-  const location = useLocation();
-  const pathname = location.pathname;
-
-  const getSelectedIndex = () => {
-    if (pathname.includes("/exam")) return 1;
-    if (pathname.includes("/members")) return 2;
-    return 0;
-  };
-
-  const selectedIndex = getSelectedIndex();
+const ClassroomLayout = ({className}: ClassroomLayoutProps) => {
+  const {selectedIndex, exams, getExams, members} = useClassroomLayout()
 
   return (
     <Box sx={{
@@ -127,7 +84,7 @@ const ClassroomLayout = ({ className }: ClassroomLayoutProps) => {
       {/* Main Content */}
       <Box component="main" sx={{flexGrow: 1, p: 3, overflowY: 'auto'}}>
         <ExamsContext.Provider value={{ exams, getExams }}>
-          <Outlet context={{ className, teacherName, members }} />
+          <Outlet context={{ className, members }} />
         </ExamsContext.Provider>
       </Box>
     </Box>

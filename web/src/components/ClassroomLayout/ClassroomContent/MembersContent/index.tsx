@@ -14,7 +14,8 @@ interface HeaderMember {
 const headers: HeaderMember[] = [
   {name: 'id', text: 'NO.'},
   {name: 'name', text: 'HỌ TÊN'},
-  {name: 'position', text: 'VỊ TRÍ'}
+  {name: 'position', text: 'VỊ TRÍ'},
+  {name: 'key', text: ''}
 ]
 
 export default function MembersContent() {
@@ -45,6 +46,7 @@ export default function MembersContent() {
                 <TableCell>{member.id}</TableCell>
                 <TableCell>{member.name}</TableCell>
                 <TableCell>{member.role}</TableCell>
+                <TableCell></TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -14,7 +14,7 @@ import {useOutletContext} from "react-router";
 import {useExams} from "../../examsProvider.tsx";
 
 export default function OverviewContent() {
-  const { className, teacherName, members}  = useOutletContext<ClassroomContextType>();
+  const { className, members}  = useOutletContext<ClassroomContextType>();
   const { exams } = useExams();
 
   const Item = styled(Paper)(({theme}) => ({
@@ -51,7 +51,7 @@ export default function OverviewContent() {
                 </Typography>
 
                 <Typography variant="body1" sx={{opacity: 0.9}}>
-                  Giáo viên: {teacherName}
+                  Giáo viên: {}
                 </Typography>
 
                 <Box sx={{display: 'flex', alignItems: 'flex-end', mt: 2, gap: '10px'}}>
