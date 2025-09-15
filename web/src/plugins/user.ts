@@ -38,6 +38,7 @@ export const useUser = create<UserState>()(
           auth,
           user: payload ? {
             ...defaultUserState.user,
+            id: payload.id,
             name: payload.name ?? '',
             role: payload.role ?? '',
             profile: payload.profile ?? {id: '', url: ''},
@@ -54,7 +55,7 @@ export const useUser = create<UserState>()(
       clear: () => set({ ...defaultUserState }),
     }),
     {
-      name: "user", // name of the item in the storage (must be unique)
+      name: "user",
     }
   )
 )

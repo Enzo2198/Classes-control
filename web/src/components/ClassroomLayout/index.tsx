@@ -6,14 +6,22 @@ import {Link, Outlet} from 'react-router-dom';
 import {ExamsContext} from "./examsProvider.tsx"
 import {useClassroomLayout} from "./classroomLayout.tsx";
 import type {ReactNode} from "react";
+import type {Member} from "../../utils";
 
 export interface ClassroomLayoutProps {
   className: string;
   children?: ReactNode;
 }
 
+export interface ClassroomOutletContext {
+  className: string;
+  members: Member[];
+  loading: boolean;
+  error: string | null;
+}
+
 const ClassroomLayout = ({className}: ClassroomLayoutProps) => {
-  const {selectedIndex, exams, getExams, members} = useClassroomLayout()
+  const {selectedIndex, exams, refetch, members, loading, error} = useClassroomLayout()
 
   return (
     <Box sx={{
@@ -22,7 +30,7 @@ const ClassroomLayout = ({className}: ClassroomLayoutProps) => {
       backgroundColor: '#f5f5f5'
     }}>
 
-      {/*sidebar*/}
+      {/************* Sidebar ***************/}
       <Box sx={{
         width: '100%',
         maxWidth: 260,
@@ -81,10 +89,10 @@ const ClassroomLayout = ({className}: ClassroomLayoutProps) => {
         <CopyrightInfo />
       </Box>
 
-      {/* Main Content */}
+      {/*************** Main Content ******************/}
       <Box component="main" sx={{flexGrow: 1, p: 3, overflowY: 'auto'}}>
-        <ExamsContext.Provider value={{ exams, getExams }}>
-          <Outlet context={{ className, members }} />
+        <ExamsContext.Provider value={{ exams, refetchExams: refetch.exams }}>
+          <Outlet context={{ className, members, loading, error }} />
         </ExamsContext.Provider>
       </Box>
     </Box>

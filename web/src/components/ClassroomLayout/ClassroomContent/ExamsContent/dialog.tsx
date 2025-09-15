@@ -29,7 +29,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 export default function DialogCreateExam({open, onClose, onSubmit, initialData, mode = "create"}: ExamFormDialogProps) {
   const [startTime, setStartTime] = useState<Dayjs | null>(null);
   const { id } = useParams<{ id: string }>();
-  const { getExams } = useExams();
+  const { refetchExams } = useExams();
 
   const [form, setForm] = useState({
     name: "",
@@ -73,7 +73,7 @@ export default function DialogCreateExam({open, onClose, onSubmit, initialData, 
           start_time: startTime.format("YYYY-MM-DD"),
         });
         if (!response) throw new Error('Connect server failed');
-        await getExams();
+        await refetchExams();
       } catch (e) {
         console.error(e);
       }

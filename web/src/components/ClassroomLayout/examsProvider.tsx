@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 
 interface ExamsContextType {
   exams: any[];
-  getExams: () => Promise<void>;
+  refetchExams: () => Promise<void>;
 }
 
 export const ExamsContext = createContext<ExamsContextType | undefined>(undefined);

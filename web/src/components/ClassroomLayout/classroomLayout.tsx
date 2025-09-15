@@ -1,53 +1,64 @@
 import {useLocation, useParams} from 'react-router-dom';
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {getMethod, type Member} from "../../utils";
 
-
+interface Exam {
+  id: string;
+  [key: string]: string;
+}
 
 export function useClassroomLayout() {
   const {id} = useParams<{ id: string }>();
+  const location = useLocation();
 
-  // Get Members
   const [members, setMembers] = useState<Member[]>([]);
-  useEffect(() => {
-    const getMembers = async () => {
-      try {
-        if (!id) return;
-        const response = await getMethod<{ users: Member[] }>(`master/class/${id}`);
-        if (response?.users) return setMembers(response.users);
-      } catch (error) {
-        console.error('Failed to fetch members:', error);
-      }
-    };
-    getMembers();
-  }, [id]);
-
-  // Get Exams
   const [exams, setExams] = useState<any[]>([]);
-  const getExams = async () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch Members
+  const fetchMembers = useCallback(async () => {
+    if (!id) return;
     try {
-      if (!id) return;
+      const response = await getMethod<{ users: Member[] }>(`master/class/${id}`);
+      setMembers(response?.users ?? [])
+    } catch (error) {
+      console.error('Failed to fetch members:', error);
+      setError('Failed to fetch members')
+    }
+  }, [id])
+
+  // Fetch Exams
+  const fetchExams = useCallback(async () => {
+    if (!id) return;
+    try {
       const response = await getMethod(`exam_group/?class_id=${id}`);
-      setExams(response as any[]);
+      setExams(response as Exam[]);
     } catch (error) {
       console.error('Failed to fetch exams:', error);
+      setError('Failed to fetch exams')
     }
-  };
-  useEffect(() => {
-    getExams();
   }, [id]);
 
+  useEffect(() => {
+    if (!id) return;
+    setLoading(true)
+    Promise.all([fetchMembers(), fetchExams()])
+      .catch(error => console.error(error))
+      .finally(() => setLoading(false))
+  }, [id, fetchMembers, fetchExams]);
 
-  const location = useLocation();
+  // Selected index
   const pathname = location.pathname;
+  const selectedIndex = pathname.includes('/exam') ? 1
+    : pathname.includes('/members') ? 2 : 0;
 
-  const getSelectedIndex = () => {
-    if (pathname.includes("/exam")) return 1;
-    if (pathname.includes("/members")) return 2;
-    return 0;
+  return {
+    selectedIndex,
+    exams,
+    members,
+    refetch: {members: fetchMembers, exams: fetchExams},
+    loading,
+    error,
   };
-
-  const selectedIndex = getSelectedIndex();
-
-  return {selectedIndex, exams, getExams, members}
 }
