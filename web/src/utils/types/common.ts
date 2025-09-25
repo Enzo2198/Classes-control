@@ -1,20 +1,20 @@
 export interface Course {
   id: string;
   name: string;
-  memberCount: number;
   code: string;
-  themeColor?: string;
+  teachers: Member[];
+  students: Member[];
 }
 
 export interface Member {
-  id: number;
+  id: string;
   name: string;
   role: string;
-  status: string;
+  email: string;
 }
 
 export interface Test {
-  id: number;
+  id: string;
   name: string;
   start_time: string;
 }
@@ -28,15 +28,8 @@ export interface FormErrors extends FormData {
   form?: string;
 }
 
-
 export interface LoginResponse {
   access: string;
   refresh: string;
 }
 
-export interface ClassroomContextType {
-  teacherName: string,
-  className: string,
-  members: Member[] | any[],
-  exams: Test[] | any[]
-}

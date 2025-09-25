@@ -1,2 +1,2 @@
-export * from './types/common.ts'
+export * from './types'
 export * from './api.ts'

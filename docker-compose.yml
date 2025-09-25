@@ -6,12 +6,33 @@ services:
     volumes:
       - './web:/app/web'
     ports:
-      - '3000:3000'
+      - '${WEB_PORT}:3000'
     env_file:
       - .env
     command: ['npm', 'run', 'dev']
 
-#    db:
-#      container_name: ${PROJECT_NAME}-db
-#      image: postgres:16
-#      environment:
+  api:
+    container_name: ${PROJECT_NAME}-api
+    image: node:20.10.0
+    working_dir: /app/api
+    volumes:
+      - './api:/app/api'
+    ports:
+      - '${API_PORT}:4000'
+    env_file:
+      - .env
+    depends_on:
+      - db
+    command: ['npm', 'run', 'start:dev']
+
+  db:
+    container_name: ${PROJECT_NAME}-db
+    image: postgres:16
+    ports:
+      - '${DB_PORT}:5432'
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - './db:/var/lib/postgresql/data'

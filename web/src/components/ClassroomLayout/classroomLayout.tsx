@@ -1,6 +1,6 @@
 import {useLocation, useParams} from 'react-router-dom';
 import {useCallback, useEffect, useState} from "react";
-import {getMethod, type Member} from "../../utils";
+import {type Classroom, getMethod, type Member} from "../../utils";
 
 interface Exam {
   id: string;
@@ -11,6 +11,8 @@ export function useClassroomLayout() {
   const {id} = useParams<{ id: string }>();
   const location = useLocation();
 
+  const [classInfo, setClassInfo] = useState<Classroom | null>(null);
+  console.log(classInfo)
   const [members, setMembers] = useState<Member[]>([]);
   const [exams, setExams] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -20,7 +22,8 @@ export function useClassroomLayout() {
   const fetchMembers = useCallback(async () => {
     if (!id) return;
     try {
-      const response = await getMethod<{ users: Member[] }>(`master/class/${id}`);
+      const response = await getMethod<Classroom>(`master/class/${id}`);
+      setClassInfo(response)
       setMembers(response?.users ?? [])
     } catch (error) {
       console.error('Failed to fetch members:', error);
@@ -55,6 +58,7 @@ export function useClassroomLayout() {
 
   return {
     selectedIndex,
+    classInfo,
     exams,
     members,
     refetch: {members: fetchMembers, exams: fetchExams},

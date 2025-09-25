@@ -1,59 +1,68 @@
-import { type Course, getMethod } from "../../utils";
-import { useEffect, useState } from "react";
-import { isLogin } from "../Login/common.tsx";
-import { useNavigate } from "react-router";
+import {type Course, getMethod} from "../../utils";
+import {useEffect, useMemo, useState} from "react";
+import {isLogin} from "../Login/common.tsx";
+import {useNavigate} from "react-router";
+import {useUser} from "../../plugins/user.ts";
 
 const mockCourses: Course[] = [];
 
-export function useClassListPage(){
-    const [courses, setCourses] = useState<Course[]>([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
-    const navigate = useNavigate()
+export function useClassListPage() {
+  const [courses, setCourses] = useState<Course[]>([])
+  console.log(courses)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [search, setSearch] = useState<string>("")
+  const navigate = useNavigate()
+  const {user} = useUser();
 
-    useEffect(() => {
-        let isMounted = true
+  const displayAddClassButton = user?.role === 'teacher' ? 'inline-flex' : 'none';
+  const filteredCourses: Course[] = useMemo(() => courses.filter(course => {
+    return course.name.toLowerCase().includes(search.toLowerCase());
+  }), [courses, search]);
 
-        const fetchData = async () => {
-            if (!isLogin()) {
-                navigate('/login')
-                return
-            }
-            try {
-                if (isMounted) setLoading(true)
+  useEffect(() => {
+    let isMounted = true
 
-                const data = await getMethod<Course[]>('/master/class/')
+    const fetchData = async () => {
+      if (!isLogin()) {
+        navigate('/login')
+        return
+      }
+      try {
+        if (isMounted) setLoading(true)
 
-                if (!isMounted) return
+        const data = await getMethod<Course[]>('/master/class/')
 
-                if (!data) {
-                    setError('Load data thất bại')
-                    setCourses(mockCourses)
-                    return;
-                }
+        if (!isMounted) return
 
-                setCourses(data);
-                setError(null);
-            } catch (e) {
-                if (!isMounted) return
-
-                setError('Không thể tải danh sách lớp học');
-                setCourses(mockCourses);
-                console.error(e);
-            } finally {
-                if (isMounted) setLoading(false);
-            }
+        if (!data) {
+          setError('Load data thất bại')
+          setCourses(mockCourses)
+          return;
         }
-        fetchData()
 
-        return () => {
-            isMounted = false
-        };
-    }, [navigate])
+        setCourses(data);
+        setError(null);
+      } catch (e) {
+        if (!isMounted) return
 
-    const toAddCourseClick = () => {
-        navigate('/class/add');
+        setError('Không thể tải danh sách lớp học');
+        setCourses(mockCourses);
+        console.error(e);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
     }
+    fetchData()
 
-    return { courses, loading, error, toAddCourseClick }
+    return () => {
+      isMounted = false
+    };
+  }, [navigate])
+
+  const toAddCourseClick = () => {
+    navigate('/class/add');
+  }
+
+  return {loading, error, toAddCourseClick, displayAddClassButton, setSearch, filteredCourses}
 }

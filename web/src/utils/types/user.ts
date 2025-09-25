@@ -1,8 +1,7 @@
-export interface User {
-  id: string,
-  name: string,
+import type {Member} from "./common.ts";
+
+export interface User extends Member{
   email: string,
-  role: string,
   createdAt: string,
   updatedAt: string,
   isDeleted: boolean,
@@ -10,8 +9,8 @@ export interface User {
 }
 
 export interface UserProfile {
-  id: string,
-  url: string,
+  id: string | null,
+  url?: string,
 }
 
 export interface UserAuth {

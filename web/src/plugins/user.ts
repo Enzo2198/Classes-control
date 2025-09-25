@@ -1,5 +1,5 @@
-import type { User, UserAuth } from "../utils/types/user.ts";
-import { create } from "zustand";
+import type {User, UserAuth} from "../utils";
+import {create} from "zustand";
 import {persist} from "zustand/middleware";
 import {decodeToken} from "../utils/jwt.ts";
 
@@ -7,25 +7,15 @@ export interface UserState {
   auth: UserAuth
   user: User | null
   setAuth: (auth: UserAuth) => void
+
   setUser(user: Partial<User>): void
+
   clear(): void
 }
 
-const defaultUserState: { auth: UserAuth, user: User } = {
-  auth: { accessToken: '', refreshToken: '' },
-  user: {
-    id: '',
-    name: '',
-    email: '',
-    role: '',
-    createdAt: '',
-    updatedAt: '',
-    isDeleted: false,
-    profile: {
-      id: '',
-      url: '',
-    }
-  }
+const defaultUserState: { auth: UserAuth, user: User | null } = {
+  auth: {accessToken: '', refreshToken: ''},
+  user: null
 }
 
 export const useUser = create<UserState>()(
@@ -34,25 +24,36 @@ export const useUser = create<UserState>()(
       ...defaultUserState,
       setAuth: (auth) => {
         const payload = decodeToken(auth.accessToken)
-        set({
-          auth,
-          user: payload ? {
-            ...defaultUserState.user,
-            id: payload.id,
-            name: payload.name ?? '',
-            role: payload.role ?? '',
-            profile: payload.profile ?? {id: '', url: ''},
-          } : null,
-        })
-      },
-      setUser: (user) => set({
-        user: {
-          ...defaultUserState.user,
-          ...state().user,
-          ...user
+
+        if (payload) {
+          set({
+            auth,
+            user: {
+              id: payload.id,
+              name: payload.name ?? '',
+              email: payload.email ?? '',
+              role: payload.role ?? '',
+              createdAt: payload.createdAt ?? '',
+              updatedAt: payload.updatedAt ?? '',
+              isDeleted: payload.isDeleted ?? false,
+              profile: payload.profile ?? {id: '', url: ''}
+            }
+          });
+        } else {
+          set({
+            auth,
+            user: null
+          });
         }
-      }),
-      clear: () => set({ ...defaultUserState }),
+      },
+      setUser: (user) =>
+        set({
+          user: {
+            ...(state().user ?? {}),
+            ...user
+          } as User
+        }),
+      clear: () => set({...defaultUserState}),
     }),
     {
       name: "user",
