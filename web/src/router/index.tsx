@@ -7,7 +7,7 @@ import {AddNewClass, CreateExam, ExamDetail, ExamsContent, MembersContent, Overv
 
 const router = createBrowserRouter([
   {
-    path: "/classes",
+    path: "/class",
     element: <Classes/>,
   },
   {

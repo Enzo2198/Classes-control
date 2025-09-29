@@ -2,6 +2,9 @@ import { DataSource } from 'typeorm';
 import {DATA_SOURCE} from "@/share";
 import * as process from "node:process";
 import { UserEntity } from '@/modules/user/entities';
+import { ClassEntity } from '@/modules/class/entities';
+import {TeacherModule} from "@/modules/teacher/module";
+import {UserClassEntity} from "@/modules/user_class/entities";
 
 export const databaseProviders = [
   {
@@ -16,6 +19,8 @@ export const databaseProviders = [
         database: process.env.DB_NAME,
         entities: [
           UserEntity,
+          ClassEntity,
+          UserClassEntity
         ],
         synchronize: true,
       });

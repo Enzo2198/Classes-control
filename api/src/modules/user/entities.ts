@@ -1,5 +1,6 @@
 import {Column, Entity} from "typeorm";
 import {BaseEntity} from "@/modules/base/entities";
+import {Role} from "@/share";
 
 @Entity('user')
 export class UserEntity extends BaseEntity {
@@ -12,6 +13,8 @@ export class UserEntity extends BaseEntity {
   @Column()
   password: string;
 
-  @Column()
-  role: string;
+  @Column({
+    default: 'teacher'
+  })
+  role: Role;
 }
