@@ -9,4 +9,6 @@ export class ClassReq implements ClassReqI{
   @ApiProperty({example: 'code'})
   @ApiStrField()
   code: string;
+
+  userId: number;
 }

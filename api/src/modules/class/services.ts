@@ -1,22 +1,26 @@
 import {BaseService} from "@/modules/base/services";
-import {Inject, Injectable} from "@nestjs/common";
+import {HttpException, HttpStatus, Inject, Injectable} from "@nestjs/common";
 import {Repository, SelectQueryBuilder} from "typeorm";
 import {ClassEntity} from "@/modules/class/entities";
-import {ClassEntityRepository, ClassServiceI, UserClassServiceToken} from "@/share";
+import {ClassEntityRepository, ClassI, Role, UserClassServiceToken} from "@/share";
+import type {ClassReqI, ClassResI, ClassServiceI} from "@/share"
 import {UserClassEntity} from "@/modules/user_class/entities";
 import {UserEntity} from "@/modules/user/entities";
 import {UserClassService} from "@/modules/user_class/services";
+import { ClsService } from "nestjs-cls";
+import {Transactional} from "typeorm-transactional";
 
 @Injectable()
-export class ClassService extends BaseService<ClassEntity> implements ClassServiceI {
+export class ClassService extends BaseService<ClassEntity, ClassReqI, ClassResI> implements ClassServiceI {
   constructor(
     @Inject(ClassEntityRepository)
     protected repository: Repository<ClassEntity>,
+    protected cls: ClsService,
 
-    // @Inject(UserClassServiceToken)
-    // private userClassService: UserClassService,
+    @Inject(UserClassServiceToken)
+    private userClassService: UserClassService,
   ) {
-    super(repository);
+    super(repository, cls);
   }
 
   protected handleSelect(): SelectQueryBuilder<ClassEntity> {
@@ -51,5 +55,71 @@ export class ClassService extends BaseService<ClassEntity> implements ClassServi
       .innerJoin(UserClassEntity, 'user_class', 'user_class."classId" = class.id and user_class.active')
       .innerJoin(UserEntity, 'user', '"user"."id" = user_class.userId and user.active')
       .groupBy("class.id, class.code, class.name")
+  }
+
+  async find(condition = {}) {
+    const curUserId: number | null = this.getUserId();
+    const userRole: Role | null = this.getUserRole();
+    if (!curUserId || !userRole) throw new HttpException('Something went wrong', HttpStatus.INTERNAL_SERVER_ERROR);
+    let query = this.handleSelect();
+    query = this.handleFind(query, {...condition, active: true});
+
+    if (userRole !== Role.ADMIN) {
+      query = query.andWhere(qb => {
+        const subQuery = qb.subQuery()
+          .select('user_class_2.class_id')
+          .from(UserClassEntity, 'user_class_2')
+          .where('user_class_2.user_id = :user_id', {user_id: curUserId});
+        return 'class.id in ' + subQuery.getQuery();
+      });
+    }
+
+    return await query.getRawMany();
+  }
+
+  async findOne(id: number){
+    const response = await this.find({id});
+    if(!response || !Array.isArray(response) || response.length === 0)
+      throw new HttpException('Class not found', HttpStatus.NOT_FOUND);
+    return response[0];
+  }
+
+  @Transactional()
+  async createAndJoinClass(classReq: ClassReqI): Promise<ClassI> {
+    const creatorId = this.getUserId();
+    const newClass = await this.create(classReq);
+    if (!creatorId || !newClass)
+      throw new HttpException('Something went wrong', HttpStatus.INTERNAL_SERVER_ERROR);
+    await this.userClassService.create({
+      classId: newClass.id,
+      userId: creatorId
+    })
+
+    const {id, name, code} = newClass;
+    return {id, name, code};
+  }
+
+  async updateOne(id: number, classReq: ClassReqI): Promise<ClassResI> {
+    const userId: number | null = this.getUserId();
+    const userRole: Role | null = this.getUserRole();
+    if (!userId || !userRole)
+      throw new HttpException('Something went wrong', HttpStatus.INTERNAL_SERVER_ERROR);
+
+    // only teachers of the class and admin can find then update
+    const classToUpdate = await this.findOne(id);
+
+    return await super.updateOne(id, classReq);
+  }
+
+  async softDelete(id: number){
+    const userId: number | null = this.getUserId();
+    const userRole: Role | null = this.getUserRole();
+    if (!userId || !userRole)
+      throw new HttpException('Something went wrong', HttpStatus.INTERNAL_SERVER_ERROR);
+
+    // only teachers of the class or the admin can find then delete the class
+    const classToDelete = await this.findOne(id);
+
+    return await super.softDelete(id);
   }
 }

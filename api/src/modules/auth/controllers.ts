@@ -1,7 +1,16 @@
-import {ApiTags} from "@nestjs/swagger";
-import {Controller, Post} from "@nestjs/common";
+import {Body, Controller, Inject, Post} from "@nestjs/common";
+import * as share from "@/share";
+import {LoginReq} from "@/modules/auth/dtos";
 
-@ApiTags('Auth')
-@Controller('auth')
+@Controller()
 export class AuthController {
+  constructor(
+    @Inject(share.UserServiceToken)
+    private userService: share.UserServiceI,
+  ) {}
+
+  @Post('/login')
+  login(@Body() loginReq: LoginReq) {
+    return this.userService.login(loginReq);
+  }
 }

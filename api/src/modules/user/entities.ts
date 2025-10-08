@@ -14,7 +14,14 @@ export class UserEntity extends BaseEntity {
   password: string;
 
   @Column({
-    default: 'teacher'
+    type: 'enum',
+    enum: Role,
+    default: Role.STUDENT
   })
   role: Role;
+
+  // @Column({nullable: true})
+  // avatar: number | null;
+
+
 }

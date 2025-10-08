@@ -1,9 +1,13 @@
-import { ApiTags } from "@nestjs/swagger";
+import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {Body, Controller, Delete, Get, Inject, Param, Post, Put} from "@nestjs/common";
 import * as share from "@/share";
 import {ClassReq} from "@/modules/class/dtos";
+import { Headers } from '@nestjs/common';
+import { Transactional } from "typeorm-transactional";
 
-@ApiTags('Classes')
+
+@ApiBearerAuth()
+@ApiTags('Class')
 @Controller('/classes')
 export class ClassController {
   constructor(
@@ -16,8 +20,10 @@ export class ClassController {
     return this.classService.find();
   }
 
+  @Transactional()
   @Post()
-  create(@Body() data: ClassReq) {
+  create(@Body() data: ClassReq, @Headers() headers: Record < string, string >){
+    data.userId = Number(headers.userId);
     return this.classService.create(data);
   }
 

@@ -1,8 +1,9 @@
-import { ApiTags } from "@nestjs/swagger";
+import {ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import {Body, Controller, Delete, Get, Inject, Param, Post, Put} from "@nestjs/common";
 import * as share from "@/share";
 import {TeacherReq} from "@/modules/teacher/dtos";
 
+@ApiBearerAuth()
 @ApiTags('Teachers')
 @Controller('/teachers')
 export class TeacherController {
