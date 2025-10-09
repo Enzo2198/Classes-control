@@ -1,13 +1,16 @@
 import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
 import {UserService} from "@/modules/user/services";
-import {Role, StudentReqI} from "@/share";
+import {Role, StudentServiceI} from "@/share";
 import {UserEntity} from "@/modules/user/entities";
+import {SelectQueryBuilder} from "typeorm";
 
 @Injectable()
-export class StudentService extends UserService {
-  protected handleFind(query, condition): any {
-    query = super.handleFind(query, {...condition, role: 'student'});
-    return query
+export class StudentService extends UserService implements StudentServiceI{
+  protected handleFind(
+    query: SelectQueryBuilder<UserEntity>,
+    condition: Partial<Record<keyof UserEntity, any>>
+  ): SelectQueryBuilder<UserEntity> {
+    return super.handleFind(query, {...condition, role: 'student'});
   }
 
   async updateOne(id: number, data: Partial<UserEntity>) {

@@ -28,13 +28,6 @@ export interface LoginResI {
   refreshToken: string;
 }
 
-export interface TokenPayloadData {
-  name: string;
-  email: string;
-  role: Role;
-  avatar_info: AvatarInfo | null;
-}
-
 export interface ChangePasswordReqI {
   old_password: string;
   new_password: string;

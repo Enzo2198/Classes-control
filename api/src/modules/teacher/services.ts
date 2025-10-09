@@ -1,6 +1,6 @@
 import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
 import {UserService} from "@/modules/user/services";
-import {Role, TeacherReqI, TeacherServiceI} from "@/share";
+import {Role, TeacherServiceI} from "@/share";
 import {SelectQueryBuilder} from "typeorm";
 import {UserEntity} from "@/modules/user/entities";
 

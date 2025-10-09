@@ -31,8 +31,6 @@ export class UserService extends BaseService<UserEntity, UserReqI, UserResI>
     return super.getPublicColumns().filter(c => c != 'password');
   }
 
-
-
   async login(loginReq: LoginReq): Promise<LoginResI> {
     // Check email and password is correct?
     const users: UserI[] = await this.find({email: loginReq.email, password: loginReq.password});

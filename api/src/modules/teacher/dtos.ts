@@ -6,11 +6,7 @@ export class TeacherReq implements TeacherReqI {
   @ApiStrField()
   name: string;
 
-  @ApiProperty({example: 'email@gmail.com', required: false})
+  @ApiProperty({example: 'teacher@gmail.com', required: false})
   @ApiStrFieldNullable()
   email?: string;
-
-  @ApiProperty({example: 'password'})
-  @ApiStrField()
-  password: string;
 }

@@ -20,7 +20,7 @@ export const databaseProviders = [
         entities: [
           UserEntity,
           ClassEntity,
-          UserClassEntity
+          UserClassEntity,
         ],
         synchronize: true,
       });

@@ -4,7 +4,7 @@ import {
   InvitationI,
   LoginReqI,
   LoginResI,
-  StudentReqI,
+  StudentReqI, StudentResI,
   TeacherReqI,
   TeacherResI,
   UserReqI,
@@ -33,7 +33,7 @@ export interface ClassUserServiceI extends BaseServiceI<ClassUserReqI, ClassUser
 
 export interface TeacherServiceI extends BaseServiceI<TeacherReqI, TeacherResI> {}
 
-export interface StudentServiceI extends BaseServiceI<StudentReqI, any> {}
+export interface StudentServiceI extends BaseServiceI<StudentReqI, StudentResI> {}
 
 export interface InvitationServiceI {
   invite: (invitation: InvitationI) => void
