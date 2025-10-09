@@ -8,5 +8,5 @@ export class StudentReq implements StudentReqI {
 
   @ApiProperty({example: 'student@gmail.com', required: false})
   @ApiStrFieldNullable()
-  email?: string;
+  email: string;
 }

@@ -3,12 +3,12 @@ import {
   ClassReqI,
   InvitationI,
   LoginReqI,
-  LoginResI,
+  LoginResI, RegisterReqI,
   StudentReqI, StudentResI,
   TeacherReqI,
   TeacherResI,
   UserReqI,
-  UserResI
+  UserResI, UserWithPassI
 } from "@/share";
 import {ClassUserReqI, ClassUserResI} from "@/share/type/user-class";
 
@@ -22,9 +22,8 @@ export interface BaseServiceI <RequestI, ResponseI> {
 }
 
 export interface UserServiceI extends BaseServiceI<UserReqI, UserResI>{
-  login: (loginReq: LoginReqI) => Promise<LoginResI>
-  //
-  changePassword: (data: ChangePasswordReqI) => Promise<{ msg: string }>;
+  findUserByEmailWithPassword: (email: string) => Promise<UserWithPassI | null>;
+  // changePassword: (data: ChangePasswordReqI) => Promise<{ msg: string }>;
 }
 
 export interface ClassServiceI extends BaseServiceI<ClassReqI, any> {}
@@ -37,4 +36,9 @@ export interface StudentServiceI extends BaseServiceI<StudentReqI, StudentResI> 
 
 export interface InvitationServiceI {
   invite: (invitation: InvitationI) => void
+}
+
+export interface AuthServiceI {
+  login: (loginReq: LoginReqI) => Promise<LoginResI>
+  register: (data: RegisterReqI) => Promise<{msg: string}>
 }

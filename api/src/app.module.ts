@@ -23,8 +23,8 @@ import {ConfigModule} from "@nestjs/config";
     }),
 
     DatabaseModule,
-    UserModule,
     AuthModule,
+    UserModule,
     TeacherModule,
     StudentModule,
     ClassModule,

@@ -14,3 +14,5 @@ export const UserClassServiceToken = Symbol('UserClassServiceI')
 export const UserClassEntityRepository = Symbol('UserClassEntityRepository')
 
 export const InvitationServiceToken = Symbol('InvitationServiceI')
+
+export const AuthServiceToken = Symbol('AuthServiceI')

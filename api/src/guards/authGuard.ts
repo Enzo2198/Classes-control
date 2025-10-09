@@ -44,7 +44,6 @@ export class AuthGuard implements CanActivate {
 
       // Save user to Cls
       this.clsService.set('user', request.user)
-      console.log('AuthGuard set user:', this.clsService.get('user'));
 
       return true
 

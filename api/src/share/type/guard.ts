@@ -2,10 +2,10 @@ import {AvatarInfo, Role, UserResI} from "@/share";
 
 export interface ReqWithUserI extends Request {
   request: {
-      id: number; sub: number; // user id
-      // user id
-      data: TokenPayloadData; iat: number; // issued at
-      // issued at
+      id: number;
+      sub: number; // user id
+      data: TokenPayloadData;
+      iat: number; // issued at
       exp: number; // expired at
   };
   user: UserResI

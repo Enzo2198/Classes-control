@@ -2,7 +2,8 @@ import {AvatarInfo, Role} from "@/share";
 
 export interface UserBaseI {
   name: string;
-  email?: string;
+  email: string;
+  status?: string;
 }
 
 export interface UserI extends UserBaseI {
@@ -10,17 +11,20 @@ export interface UserI extends UserBaseI {
   role: Role
 }
 
-export interface UserReqI extends UserBaseI {
-  password: string;
-}
+export interface UserReqI extends UserBaseI {}
 
 export interface UserResI extends UserI {
-  avatar: AvatarInfo;
+  avatar_info: AvatarInfo | null;
 }
 
 export interface LoginReqI {
   email: string;
   password: string;
+}
+
+export interface UserWithPassI extends UserResI {
+  password: string;
+
 }
 
 export interface LoginResI {
@@ -31,4 +35,9 @@ export interface LoginResI {
 export interface ChangePasswordReqI {
   old_password: string;
   new_password: string;
+}
+
+export interface RegisterReqI extends UserReqI {
+  password: string;
+  role: Role;
 }
