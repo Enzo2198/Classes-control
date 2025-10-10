@@ -7,9 +7,10 @@ import {ClassEntityRepository, ClassServiceToken, DATA_SOURCE, UserClassServiceT
 import {ClassService} from "@/modules/class/services";
 import {UserClassModule} from "@/modules/user_class/module";
 import {UserClassService} from "@/modules/user_class/services";
+import {UserModule} from "@/modules/user/module";
 
 @Module({
-  imports: [DatabaseModule, UserClassModule],
+  imports: [DatabaseModule, UserClassModule, UserModule],
   controllers: [ClassController],
   providers: [
     {

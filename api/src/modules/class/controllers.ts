@@ -1,14 +1,16 @@
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
-import {Body, Controller, Delete, Get, Inject, Param, Post, Put} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Inject, Param, Post, Put, UseGuards} from "@nestjs/common";
 import * as share from "@/share";
 import {ClassReq} from "@/modules/class/dtos";
 import { Headers } from '@nestjs/common';
 import { Transactional } from "typeorm-transactional";
+import {AuthGuard} from "@/guards";
 
 
 @ApiBearerAuth()
-@ApiTags('Class')
+@ApiTags('Classes')
 @Controller('/classes')
+@UseGuards(AuthGuard)
 export class ClassController {
   constructor(
     @Inject(share.ClassServiceToken)
