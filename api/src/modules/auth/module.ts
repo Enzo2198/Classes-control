@@ -1,14 +1,17 @@
-import {Module} from "@nestjs/common";
+import {forwardRef, Module} from "@nestjs/common";
 import {AuthController} from "@/modules/auth/controllers";
 import {UserModule} from "@/modules/user/module";
 import {JwtModule} from "@nestjs/jwt";
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import {ConfigModule, ConfigService} from "@nestjs/config";
+import {RegisterService} from "@/modules/auth/services/register";
+import {LoginService} from "@/modules/auth/services/login";
+import {AuthService} from "./services/auth";
 import {AuthServiceToken} from "@/share";
-import { AuthService } from "./services/services";
+import {RefreshTokenService} from "@/modules/auth/services/refreshToken";
 
 @Module({
   imports: [
-    UserModule,
+    forwardRef(() => UserModule),
 
     JwtModule.registerAsync({
       global: true,
@@ -26,8 +29,12 @@ import { AuthService } from "./services/services";
       provide: AuthServiceToken,
       useClass: AuthService,
     },
+    LoginService,
+    RegisterService,
+    RefreshTokenService,
   ],
 
   exports: [JwtModule],
 })
-export class AuthModule {}
+export class AuthModule {
+}

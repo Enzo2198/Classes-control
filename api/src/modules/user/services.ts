@@ -2,8 +2,7 @@ import {HttpException, HttpStatus, Inject, Injectable} from "@nestjs/common";
 import {Repository} from "typeorm";
 import { UserEntity } from "./entities";
 import {BaseService} from "@/modules/base/services";
-import {LoginResI, UserEntityRepository, UserI, UserReqI, UserResI, UserServiceI, UserWithPassI} from "@/share";
-import {LoginReq} from "@/modules/auth/dtos";
+import {LoginResI, UserEntityRepository, UserReqI, UserResI, UserServiceI, UserWithPassI} from "@/share";
 import {sign} from 'jsonwebtoken'
 import * as process from "node:process";
 import {ClsService} from "nestjs-cls";

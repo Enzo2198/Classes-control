@@ -11,6 +11,7 @@ import {
   UserResI, UserWithPassI
 } from "@/share";
 import {ClassUserReqI, ClassUserResI} from "@/share/type/user-class";
+import {RefreshTokenReq} from "@/modules/auth/dtos/refreshToken";
 
 export interface BaseServiceI <RequestI, ResponseI> {
   find: (params?: any) => Promise<ResponseI[]>;
@@ -41,4 +42,5 @@ export interface InvitationServiceI {
 export interface AuthServiceI {
   login: (loginReq: LoginReqI) => Promise<LoginResI>
   register: (data: RegisterReqI) => Promise<{msg: string}>
+  refreshToken: (data: RefreshTokenReq) => Promise<LoginResI>
 }

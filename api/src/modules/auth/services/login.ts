@@ -1,50 +1,19 @@
 import {HttpException, HttpStatus, Inject, Injectable} from "@nestjs/common";
-import type {
-  AuthServiceI,
-  LoginReqI,
-  LoginResI,
-  RegisterReqI,
-  TokenPayloadData,
-  UserResI,
-  UserServiceI,
-  UserWithPassI
-} from "@/share";
-import {UserServiceToken, UserEntityRepository} from "@/share";
+import type {LoginReqI, LoginResI, TokenPayloadData, UserServiceI, UserWithPassI} from "@/share";
+import {UserServiceToken} from "@/share";
 import {JwtService} from "@nestjs/jwt";
-import {Repository} from "typeorm";
-import {UserEntity} from "@/modules/user/entities";
 import {ConfigService} from "@nestjs/config";
 import * as bcrypt from 'bcrypt';
 
-
 @Injectable()
-export class AuthService implements AuthServiceI {
+export class LoginService {
   constructor(
     private readonly jwrService: JwtService,
     private readonly configService: ConfigService,
 
     @Inject(UserServiceToken)
     private readonly userService: UserServiceI,
-    @Inject(UserEntityRepository)
-    private readonly userRepository: Repository<UserEntity>,
   ) {}
-
-  async register(data: RegisterReqI) {
-    // Check the email already exists
-    const users: UserResI[] = await this.userService.find ({
-      email: data.email,
-    })
-    if (users.length > 0) {
-      throw new HttpException('Email already registered', HttpStatus.CONFLICT);
-    }
-
-    // Hash password before saving
-    const saltRounds = 10;
-    const hashedPassword: string = await bcrypt.hash(data.password, saltRounds);
-    const newUser = {...data, password: hashedPassword}
-    await this.userService.create(newUser);
-    return {msg: 'successfully registered'};
-  }
 
   async login(data: LoginReqI): Promise<LoginResI> {
     // Check the email exists in the DB
