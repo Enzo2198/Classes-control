@@ -28,5 +28,6 @@ import {UserModule} from "@/modules/user/module";
       useClass: UserClassService
     }
   ],
+  exports: [ClassServiceToken],
 })
 export class ClassModule {}

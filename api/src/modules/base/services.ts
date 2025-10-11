@@ -45,7 +45,7 @@ export abstract class BaseService<Entity extends BaseEntity, RequestI, ResponseI
     return columns.filter((column) => !privateColumns.includes(column));
   }
 
-  private getTableName() {
+  protected getTableName() {
     return this.repository.metadata.name
   }
 

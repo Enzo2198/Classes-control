@@ -7,18 +7,17 @@ import type {ClassReqI, ClassResI, ClassServiceI} from "@/share"
 import {UserClassEntity} from "@/modules/user_class/entities";
 import {UserEntity} from "@/modules/user/entities";
 import {UserClassService} from "@/modules/user_class/services";
-import { ClsService } from "nestjs-cls";
+import {ClsService} from "nestjs-cls";
 import {Transactional} from "typeorm-transactional";
 
 @Injectable()
 export class ClassService extends BaseService<ClassEntity, ClassReqI, ClassResI> implements ClassServiceI {
   constructor(
+    protected readonly cls: ClsService,
     @Inject(ClassEntityRepository)
-    protected repository: Repository<ClassEntity>,
-    protected cls: ClsService,
-
+    protected readonly repository: Repository<ClassEntity>,
     @Inject(UserClassServiceToken)
-    private userClassService: UserClassService,
+    private readonly userClassService: UserClassService,
   ) {
     super(repository, cls);
   }
@@ -27,34 +26,37 @@ export class ClassService extends BaseService<ClassEntity, ClassReqI, ClassResI>
     return this.repository
       .createQueryBuilder('class')
       .select([
-        'class.id as id',
+        'class.id::int as id',
         'class.name as name',
         'class.code as code',
-        `
-          coalesce(
-            json_agg(
-              json_build_object(
-                'id', "user".id,
-                'name', "user".name,
-                'role', "user".role
-              )
-            ) filter ( where  "user".role = 'teacher')
-          ) as "teachers",
-
-          coalesce(
-            json_agg(
-              json_build_object(
-                'id', "user".id,
-                'name', "user".name,
-                'role', "user".role
-              )
-            ) filter ( where  "user".role = 'student')
-           ) as "students"
-        `
+        `coalesce(
+                    json_agg(
+                        json_build_object(
+                            'id', "user".id,
+                            'name', "user".name,
+                            'role', "user".role,
+                            'email', "user".email
+                        )
+                    ) filter (where "user".role = 'teacher'),
+                 '[]') as teachers, 
+                    
+                 coalesce(
+                    json_agg(
+                        json_build_object(
+                            'id', "user".id,
+                            'name', "user".name,
+                            'role', "user".role,
+                            'email', "user".email
+                        )
+                    ) filter (where "user".role = 'student'),
+                 '[]') as students
+                `
       ])
-      .innerJoin(UserClassEntity, 'user_class', 'user_class."classId" = class.id and user_class.active')
-      .innerJoin(UserEntity, 'user', '"user"."id" = user_class.userId and user.active')
-      .groupBy("class.id, class.code, class.name")
+      .innerJoin(UserClassEntity, 'user_class', 'user_class.classId = class.id and user_class.active')
+      .innerJoin(UserEntity, 'user', '"user".id = user_class.userId and "user".active')
+      .groupBy('class.id, class.name, class.code');
+
+    console.log(this.getTableName());
   }
 
   async find(condition = {}) {
@@ -67,9 +69,9 @@ export class ClassService extends BaseService<ClassEntity, ClassReqI, ClassResI>
     if (userRole !== Role.ADMIN) {
       query = query.andWhere(qb => {
         const subQuery = qb.subQuery()
-          .select('user_class_2.class_id')
+          .select('user_class_2.classId')
           .from(UserClassEntity, 'user_class_2')
-          .where('user_class_2.user_id = :user_id', {user_id: curUserId});
+          .where('user_class_2.userId = :userId', {userId: curUserId});
         return 'class.id in ' + subQuery.getQuery();
       });
     }
@@ -77,9 +79,9 @@ export class ClassService extends BaseService<ClassEntity, ClassReqI, ClassResI>
     return await query.getRawMany();
   }
 
-  async findOne(id: number){
+  async findOne(id: number) {
     const response = await this.find({id});
-    if(!response || !Array.isArray(response) || response.length === 0)
+    if (!response || !Array.isArray(response) || response.length === 0)
       throw new HttpException('Class not found', HttpStatus.NOT_FOUND);
     return response[0];
   }
@@ -90,6 +92,8 @@ export class ClassService extends BaseService<ClassEntity, ClassReqI, ClassResI>
     const newClass = await this.create(classReq);
     if (!creatorId || !newClass)
       throw new HttpException('Something went wrong', HttpStatus.INTERNAL_SERVER_ERROR);
+
+    // Add teacher in user_class
     await this.userClassService.create({
       classId: newClass.id,
       userId: creatorId
@@ -111,7 +115,7 @@ export class ClassService extends BaseService<ClassEntity, ClassReqI, ClassResI>
     return await super.updateOne(id, classReq);
   }
 
-  async softDelete(id: number){
+  async softDelete(id: number) {
     const userId: number | null = this.getUserId();
     const userRole: Role | null = this.getUserRole();
     if (!userId || !userRole)

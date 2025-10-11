@@ -1,5 +1,6 @@
 import {
   ChangePasswordReqI,
+  ClassI,
   ClassReqI,
   InvitationI,
   LoginReqI,
@@ -27,7 +28,9 @@ export interface UserServiceI extends BaseServiceI<UserReqI, UserResI>{
   // changePassword: (data: ChangePasswordReqI) => Promise<{ msg: string }>;
 }
 
-export interface ClassServiceI extends BaseServiceI<ClassReqI, any> {}
+export interface ClassServiceI extends BaseServiceI<ClassReqI, any> {
+  createAndJoinClass: (data: ClassReqI) => Promise<ClassI>;
+}
 
 export interface ClassUserServiceI extends BaseServiceI<ClassUserReqI, ClassUserResI> {}
 

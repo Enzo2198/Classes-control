@@ -1,10 +1,12 @@
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
-import {Body, Controller, Delete, Get, Inject, Param, Post, Put, UseGuards} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put, UseGuards} from "@nestjs/common";
 import * as share from "@/share";
 import {ClassReq} from "@/modules/class/dtos";
-import { Headers } from '@nestjs/common';
 import { Transactional } from "typeorm-transactional";
 import {AuthGuard} from "@/guards";
+import {Role} from "@/share";
+import {Roles} from "@/guards/rolesDecorator";
+import { RolesGuard } from "@/guards/rolesGuard";
 
 
 @ApiBearerAuth()
@@ -14,28 +16,42 @@ import {AuthGuard} from "@/guards";
 export class ClassController {
   constructor(
     @Inject(share.ClassServiceToken)
-    private classService: share.ClassServiceI
+    private readonly classService: share.ClassServiceI
   ) {}
 
   @Get()
-  get() {
+  @Roles(Role.ADMIN, Role.TEACHER, Role.STUDENT)
+  @UseGuards(RolesGuard)
+  findAll() {
     return this.classService.find();
+  }
+
+  @Get(':id')
+  @Roles(Role.ADMIN, Role.TEACHER, Role.STUDENT)
+  @UseGuards(RolesGuard)
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.classService.findOne(id);
   }
 
   @Transactional()
   @Post()
-  create(@Body() data: ClassReq, @Headers() headers: Record < string, string >){
-    data.userId = Number(headers.userId);
-    return this.classService.create(data);
+  @Roles(Role.ADMIN, Role.TEACHER)
+  @UseGuards(RolesGuard)
+  create(@Body() data: ClassReq){
+    return this.classService.createAndJoinClass(data);
   }
 
   @Put('/:id')
-  update(@Param('id')id: number, @Body() data: ClassReq) {
+  @Roles(Role.ADMIN, Role.TEACHER)
+  @UseGuards(RolesGuard)
+  update(@Param('id', ParseIntPipe)id: number, @Body() data: ClassReq) {
     return this.classService.updateOne(Number(id), data);
   }
 
   @Delete('/:id')
-  delete(@Param('id')id: number) {
+  @Roles(Role.TEACHER, Role.ADMIN)
+  @UseGuards(RolesGuard)
+  delete(@Param('id', ParseIntPipe)id: number) {
     return this.classService.softDelete(id)
   }
 }
