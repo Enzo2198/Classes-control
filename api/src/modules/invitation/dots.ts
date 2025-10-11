@@ -1,13 +1,20 @@
 import {InvitationI} from "@/share";
 import {ApiIntField, ApiStrField} from "@/share";
+import {ApiProperty} from "@nestjs/swagger";
 
 export class InvitationReq implements InvitationI {
+  @ApiProperty({example: 1})
   @ApiIntField()
-  userId: number;
+  user_id: number;
 
+  @ApiProperty({example: 1})
   @ApiIntField()
-  classId: number;
+  class_id: number;
 
+  @ApiProperty({
+    example: 'code',
+    minLength: 6
+  })
   @ApiStrField()
   code: string;
 }

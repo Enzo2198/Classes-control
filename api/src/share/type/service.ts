@@ -32,7 +32,7 @@ export interface ClassServiceI extends BaseServiceI<ClassReqI, any> {
   createAndJoinClass: (data: ClassReqI) => Promise<ClassI>;
 }
 
-export interface ClassUserServiceI extends BaseServiceI<ClassUserReqI, ClassUserResI> {}
+export interface UserClassServiceI extends BaseServiceI<ClassUserReqI, ClassUserResI> {}
 
 export interface TeacherServiceI extends BaseServiceI<TeacherReqI, TeacherResI> {}
 

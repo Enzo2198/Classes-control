@@ -52,8 +52,8 @@ export class ClassService extends BaseService<ClassEntity, ClassReqI, ClassResI>
                  '[]') as students
                 `
       ])
-      .innerJoin(UserClassEntity, 'user_class', 'user_class.classId = class.id and user_class.active')
-      .innerJoin(UserEntity, 'user', '"user".id = user_class.userId and "user".active')
+      .innerJoin(UserClassEntity, 'user_class', 'user_class.class_id = class.id and user_class.active')
+      .innerJoin(UserEntity, 'user', '"user".id = user_class.user_id and "user".active')
       .groupBy('class.id, class.name, class.code');
 
     console.log(this.getTableName());
@@ -69,9 +69,9 @@ export class ClassService extends BaseService<ClassEntity, ClassReqI, ClassResI>
     if (userRole !== Role.ADMIN) {
       query = query.andWhere(qb => {
         const subQuery = qb.subQuery()
-          .select('user_class_2.classId')
+          .select('user_class_2.class_id')
           .from(UserClassEntity, 'user_class_2')
-          .where('user_class_2.userId = :userId', {userId: curUserId});
+          .where('user_class_2.user_id = :user_id', {user_id: curUserId});
         return 'class.id in ' + subQuery.getQuery();
       });
     }
@@ -95,8 +95,8 @@ export class ClassService extends BaseService<ClassEntity, ClassReqI, ClassResI>
 
     // Add teacher in user_class
     await this.userClassService.create({
-      classId: newClass.id,
-      userId: creatorId
+      class_id: newClass.id,
+      user_id: creatorId
     })
 
     const {id, name, code} = newClass;

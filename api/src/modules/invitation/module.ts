@@ -3,9 +3,11 @@ import {InvitationServiceToken} from "@/share";
 import {InvitationController} from "@/modules/invitation/controllers";
 import {InvitationService} from "@/modules/invitation/services";
 import {UserClassModule} from "@/modules/user_class/module";
+import {UserModule} from "../user/module";
+import {ClassModule} from "@/modules/class/module";
 
 @Module({
-  imports: [UserClassModule],
+  imports: [UserClassModule, ClassModule, UserModule],
   controllers: [InvitationController],
   providers: [
     {
@@ -14,4 +16,5 @@ import {UserClassModule} from "@/modules/user_class/module";
     }
   ],
 })
-export class InvitationModule {}
+export class InvitationModule {
+}

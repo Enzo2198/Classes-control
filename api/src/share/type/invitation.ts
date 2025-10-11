@@ -1,5 +1,5 @@
 export interface InvitationI {
-  userId: number;
-  classId: number;
+  user_id: number;
+  class_id: number;
   code: string;
 }

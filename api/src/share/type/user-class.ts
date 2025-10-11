@@ -1,6 +1,6 @@
 interface ClassUserBaseI {
-  classId: number;
-  userId: number;
+  class_id: number;
+  user_id: number;
 }
 
 export interface ClassUserI extends ClassUserBaseI {

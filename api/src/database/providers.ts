@@ -5,6 +5,7 @@ import { UserEntity } from '@/modules/user/entities';
 import { ClassEntity } from '@/modules/class/entities';
 import {UserClassEntity} from "@/modules/user_class/entities";
 import {addTransactionalDataSource} from "typeorm-transactional";
+import {ClassSubscriber} from "@/modules/class/subcriber";
 
 export const databaseProviders = [
   {
@@ -21,6 +22,9 @@ export const databaseProviders = [
           UserEntity,
           ClassEntity,
           UserClassEntity,
+        ],
+        subscribers: [
+          ClassSubscriber
         ],
         synchronize: true,
       });
