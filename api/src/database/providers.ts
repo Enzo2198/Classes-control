@@ -6,6 +6,11 @@ import { ClassEntity } from '@/modules/class/entities';
 import {UserClassEntity} from "@/modules/user_class/entities";
 import {addTransactionalDataSource} from "typeorm-transactional";
 import {ClassSubscriber} from "@/modules/class/subcriber";
+import { ExamEntity } from '@/modules/exam/entities';
+import { ExamSubscriber } from '@/modules/exam/subcriber';
+import { QuestionEntity } from '@/modules/question/entities';
+import { QuestionSubscriber } from '@/modules/question/subcriber';
+import {FileEntity} from "@/modules/file/entities";
 
 export const databaseProviders = [
   {
@@ -22,9 +27,15 @@ export const databaseProviders = [
           UserEntity,
           ClassEntity,
           UserClassEntity,
+          ExamEntity,
+          QuestionEntity,
+          FileEntity,
         ],
         subscribers: [
-          ClassSubscriber
+          ClassSubscriber,
+          ExamSubscriber,
+          QuestionSubscriber,
+          ExamSubscriber,
         ],
         synchronize: true,
       });

@@ -1,7 +1,7 @@
 import {
   ChangePasswordReqI,
   ClassI,
-  ClassReqI,
+  ClassReqI, ExamReqI, ExamResI,
   InvitationI,
   LoginReqI,
   LoginResI, RegisterReqI,
@@ -13,6 +13,9 @@ import {
 } from "@/share";
 import {ClassUserReqI, ClassUserResI} from "@/share/type/user-class";
 import {RefreshTokenReq} from "@/modules/auth/dtos/refreshToken";
+import {QuestionReqI, QuestionResI} from "./question";
+import {QuestionExamReqI, QuestionExamResI} from "@/share/type/question-exam";
+import {FileReqI, FileResI} from "@/share/type/file";
 
 export interface BaseServiceI <RequestI, ResponseI> {
   find: (params?: any) => Promise<ResponseI[]>;
@@ -46,4 +49,17 @@ export interface AuthServiceI {
   login: (loginReq: LoginReqI) => Promise<LoginResI>
   register: (data: RegisterReqI) => Promise<{msg: string}>
   refreshToken: (data: RefreshTokenReq) => Promise<LoginResI>
+}
+
+export interface QuestionServiceI extends BaseServiceI<QuestionReqI, QuestionResI> {
+  createMany: (data: QuestionReqI[]) => Promise<QuestionReqI[]>;
+  updateMany: (data: QuestionReqI[]) => Promise<QuestionReqI[]>;
+}
+
+export interface ExamServiceI extends BaseServiceI<ExamReqI, ExamResI> {}
+
+export interface QuestionExamServiceI extends BaseServiceI<QuestionExamReqI, QuestionExamResI> {}
+
+export interface FileServiceI extends BaseServiceI<FileReqI, FileResI> {
+  uploadAndCreateFile: (file: Express.Multer.File) => Promise<FileResI>;
 }

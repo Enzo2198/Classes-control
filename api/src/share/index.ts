@@ -1,3 +1,3 @@
 export * from './const'
 export * from './type'
-export * from './decorators'
+export * from './commons'

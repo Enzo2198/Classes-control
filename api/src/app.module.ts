@@ -8,6 +8,8 @@ import {InvitationModule} from './modules/invitation/module';
 import {AuthModule} from "@/modules/auth/module";
 import {ClsModule} from "nestjs-cls";
 import {ConfigModule} from "@nestjs/config";
+import { ExamModule } from './modules/exam/module';
+import { QuestionModule } from './modules/question/module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import {ConfigModule} from "@nestjs/config";
     StudentModule,
     ClassModule,
     InvitationModule,
+    ExamModule,
+    QuestionModule,
   ],
   controllers: [],
   providers: [],

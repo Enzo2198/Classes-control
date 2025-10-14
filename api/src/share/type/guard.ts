@@ -24,7 +24,3 @@ export interface TokenPayloadData {
   role: Role;
   avatar_info: AvatarInfo | null;
 }
-
-export interface RequestWithUser extends Request {
-  user: UserResI;
-}

@@ -16,3 +16,16 @@ export const UserClassEntityRepository = Symbol('UserClassEntityRepository')
 export const InvitationServiceToken = Symbol('InvitationServiceI')
 
 export const AuthServiceToken = Symbol('AuthServiceI')
+
+export const QuestionServiceToken = Symbol('QuestionServiceI')
+export const QuestionEntityRepository = Symbol('QuestionEntityRepository')
+
+export const ExamServiceToken = Symbol('ExamServiceI')
+export const ExamEntityRepository = Symbol('ExamEntityRepository')
+
+export const QuestionExamServiceToken = Symbol('QuestionExamServiceI')
+export const QuestionExamEntityRepository = Symbol('QuestionExamEntityRepository')
+
+export const FileServiceToken = Symbol('FileServiceI');
+export const FileEntityRepository = Symbol('FileEntityRepository');
+export const CloudinaryProvider = Symbol('CloudinaryProvider');
