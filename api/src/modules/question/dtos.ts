@@ -9,7 +9,7 @@ export class CreateQuestion implements QuestionReqI {
   index: number;
 
   @ApiProperty({
-    example: 'Multiple-choice',
+    example: 'multiple-choice',
     enum: QuestionType
   })
   @IsEnum(QuestionType, {message: 'type must be: single-choice, multiple-choice, long-response'})

@@ -28,11 +28,11 @@ export class FileEntity extends BaseEntity {
   original_name: string;
 
   @Column({
-    name: 'file_style',
+    name: 'file_type',
     type: 'varchar',
     length: 50
   })
-  file_style: string;
+  file_type: string;
 
   @Column()
   size: number;

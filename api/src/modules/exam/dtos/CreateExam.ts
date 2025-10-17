@@ -4,6 +4,7 @@ import {ApiProperty} from "@nestjs/swagger";
 import {ValidateNested} from "class-validator";
 import {plainToInstance, Transform} from "class-transformer";
 import {BaseExam} from "./BaseExam";
+import {BadRequestException} from "@nestjs/common";
 
 export class CreateExam extends BaseExam implements ExamReqI {
   @ApiProperty({type: [CreateQuestion]})
@@ -14,7 +15,7 @@ export class CreateExam extends BaseExam implements ExamReqI {
       try {
         parsedValue = JSON.parse(value);
       } catch {
-        return 'Invalid json'
+        throw new BadRequestException('Invalid JSON for questions field');
       }
     } else {
       parsedValue = value;
@@ -33,5 +34,5 @@ export class CreateExamWithFile extends CreateExam {
     format: 'binary', // Inform to Swagger that this is a file upload
     required: true,
   })
-  exam_file: any
+  examFile: any
 }

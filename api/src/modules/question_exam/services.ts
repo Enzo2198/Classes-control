@@ -4,7 +4,7 @@ import {QuestionExamEntity} from "./entities";
 import {BaseService} from "@/modules/base/services";
 import {QuestionExamEntityRepository, QuestionExamServiceI} from "@/share";
 import {ClsService} from "nestjs-cls";
-import {QuestionExamReqI, QuestionExamResI} from "@/share/type/question-exam";
+import {QuestionExamReqI, QuestionExamResI} from "@/share/type/question_exam";
 
 @Injectable()
 export class QuestionExamService extends BaseService<QuestionExamEntity, QuestionExamReqI, QuestionExamResI> implements QuestionExamServiceI {

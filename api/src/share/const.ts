@@ -23,8 +23,17 @@ export const QuestionEntityRepository = Symbol('QuestionEntityRepository')
 export const ExamServiceToken = Symbol('ExamServiceI')
 export const ExamEntityRepository = Symbol('ExamEntityRepository')
 
+export const ExamGroupServiceToken = Symbol('ExamGroupServiceI');
+export const ExamGroupEntityRepository = Symbol('ExamGroupEntityRepository');
+
+export const ExamResultServiceToken = Symbol('ExamResultServiceI')
+export const ExamResultEntityRepository = Symbol('ExamResultEntityRepository')
+
 export const QuestionExamServiceToken = Symbol('QuestionExamServiceI')
 export const QuestionExamEntityRepository = Symbol('QuestionExamEntityRepository')
+
+export const AnswerServiceToken = Symbol('AnswerServiceI');
+export const AnswerEntityRepository = Symbol('AnswerEntityRepository');
 
 export const FileServiceToken = Symbol('FileServiceI');
 export const FileEntityRepository = Symbol('FileEntityRepository');

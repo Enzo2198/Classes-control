@@ -21,8 +21,8 @@ export class UserEntity extends BaseEntity {
   })
   role: Role;
 
-  // @Column({nullable: true})
-  // avatar: number | null;
+  @Column({nullable: true})
+  avatar: number | null;
 
   @OneToOne(() => FileEntity, file => file.user)
   @JoinColumn({ name: 'avatar'})

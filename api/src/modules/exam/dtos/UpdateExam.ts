@@ -32,5 +32,5 @@ export class UpdateExamWithFile extends UpdateExam {
     format: 'binary',
     required: false,
   })
-  exam_file: any;
+  examFile: any;
 }

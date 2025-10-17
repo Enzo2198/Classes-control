@@ -1,4 +1,4 @@
-import {Inject, Injectable, InternalServerErrorException} from "@nestjs/common";
+import {BadRequestException, ConflictException, Inject, Injectable, InternalServerErrorException} from "@nestjs/common";
 import {Transactional} from "typeorm-transactional";
 import {BaseService} from "@/modules/base/services";
 import {ExamEntity} from "./entities";
@@ -25,51 +25,55 @@ export class ExamService extends BaseService<ExamEntity, ExamReqI, ExamResI>
     return this.repository
       .createQueryBuilder('exam')
       .select([
-        'exam.id as id',
-        'exam.name as name',
-        'exam.code as code',
-        'exam.description as description',
+        'exam.id AS id',
+        'exam.name As name',
+        'exam.code As code',
+        'exam.description As description',
         `coalesce(
           json_agg(
             json_build_object(
               'id', q.id,
               'question', q.question,
               'type', q.type,
-              'correct_answer', q.correct_answer,
+              'correct_answer', q.correct_answer
             )
-          ) filter (where q.active = true),
-        '[]') as questions`,
+          ) filter (where q.active = true and q.deleted_at is null),
+        '[]') As questions`,
       ])
       .leftJoin('question_exam', 'qe', 'qe.exam_id = exam.id')
       .leftJoin('question', 'q', 'q.id = qe.question_id')
+      .where('exam.active = true')
+      .andWhere('exam.deleted_at is null')
       .groupBy('exam.id')
   }
 
   @Transactional()
   async create(examReq: ExamReqI): Promise<ExamResI> {
-    const createId = this.getUserId();
-    const {questions, ...rest} = examReq;
+    const userId = this.getUserId();
+    const {questions, ...examData} = examReq;
+
+    if(!questions?.length) throw new BadRequestException('Exam must include at least one question');
+
+    const existing = await this.repository.findOne({where: {code: examData.code}});
+    if (existing) throw new ConflictException(`Exam code "${examData.code}" already exists`);
 
     // Create exam
-    const examInsert = await this.repository
-      .createQueryBuilder('exam')
+    const [exam] = await this.repository
+      .createQueryBuilder()
       .insert()
-      .values({...rest, created_by: createId})
-      .returning(this.getPublicColumns())
-      .execute();
+      .values({...examData, created_by: userId})
+      .returning('*')
+      .execute()
+      .then(res => res.raw);
 
-    if (!examInsert.raw?.[0]) {
-      throw new InternalServerErrorException(`Failed to create exam`);
-    }
-
-    const examId = examInsert.raw[0].id;
+    if (!exam) throw new InternalServerErrorException(`Failed to create exam`);
 
     // Create questions
     const newQuestions = await this.questionService.createMany(questions);
 
     // Save in question_exam
-    const questionExamValues = newQuestions.map((q) => ({
-      exam_id: examId,
+    const values = newQuestions.map((q) => ({
+      exam_id: exam.id,
       question_id: q.id
     }))
 
@@ -77,10 +81,10 @@ export class ExamService extends BaseService<ExamEntity, ExamReqI, ExamResI>
       .createQueryBuilder()
       .insert()
       .into('question_exam')
-      .values(questionExamValues)
+      .values(values)
       .execute();
 
-    return {...examInsert.raw[0], questions: newQuestions} as ExamResI;
+    return {...exam, questions: newQuestions} as ExamResI;
 
   }
 }

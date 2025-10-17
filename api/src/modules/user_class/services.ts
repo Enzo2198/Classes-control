@@ -4,7 +4,7 @@ import {UserClassEntity} from "./entities";
 import {BaseService} from "@/modules/base/services";
 import {UserClassEntityRepository} from "@/share";
 import type {UserClassServiceI} from "@/share";
-import {ClassUserReqI, ClassUserResI} from "@/share/type/user-class";
+import {ClassUserReqI, ClassUserResI} from "@/share/type/user_class";
 import {ClsService} from "nestjs-cls";
 
 @Injectable()

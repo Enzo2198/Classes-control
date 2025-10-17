@@ -7,6 +7,7 @@ import { ClsService } from "nestjs-cls";
 import {CloudinaryService} from "@/modules/cloudinary/services";
 import {Repository} from "typeorm";
 import {UploadApiResponse} from "cloudinary";
+import { FileReq } from "./dtos";
 
 @Injectable()
 export class FileService extends BaseService<FileEntity, FileReqI, FileResI>
@@ -51,7 +52,7 @@ export class FileService extends BaseService<FileEntity, FileReqI, FileResI>
       }
 
       // from the result Cloudinary returns, create DTO to save into DB
-      const createFileDto: FileReqI = {
+      const createFileDto: FileReq = {
         public_id: cloudinaryResponse.public_id,
         url: cloudinaryResponse.secure_url,
         original_name: file.originalname,
@@ -82,7 +83,7 @@ export class FileService extends BaseService<FileEntity, FileReqI, FileResI>
   private generateViewableUrl(fileId: number, fileType: string, originalUrl: string): string {
     if (fileType === 'pdf') {
       // return to endpoint of PDF viewer
-      return `${process.env.API_BASE_URL || 'http://localhost:3000'}/pdf-viewer/${fileId}`;
+      return `${process.env.API_BASE_URL || 'http://localhost:4000'}/pdf-viewer/${fileId}`;
     }
     // image/video can be viewed directly by the original url
     return originalUrl;

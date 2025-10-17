@@ -23,5 +23,4 @@ import { UserController } from "./controllers";
   ],
   exports: [UserEntityRepository, UserServiceToken]
 })
-export class UserModule {
-}
+export class UserModule {}

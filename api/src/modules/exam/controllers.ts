@@ -23,10 +23,10 @@ import {Transactional} from "typeorm-transactional";
 import {FileInterceptor} from "@nestjs/platform-express";
 import {RolesGuard} from "@/guards/rolesGuard";
 
-@ApiTags('Exam')
-@Controller('exam')
+@ApiTags('Exams')
+@Controller('exams')
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RolesGuard)
 export class ExamController {
   constructor(
     @Inject(ExamServiceToken)
@@ -63,9 +63,8 @@ export class ExamController {
     type: CreateExamWithFile
   })
   @Roles(Role.TEACHER, Role.ADMIN)
-  @UseGuards(RolesGuard)
   @Transactional()
-  @UseInterceptors(FileInterceptor('exam_file'))
+  @UseInterceptors(FileInterceptor('examFile'))
   async create(
     @Body() data: CreateExam,
     @UploadedFile(
@@ -90,7 +89,6 @@ export class ExamController {
   @ApiConsumes('multipart/form-data')
   @ApiBody({type: UpdateExamWithFile})
   @Roles(Role.TEACHER, Role.ADMIN)
-  @UseGuards(RolesGuard)
   @Transactional()
   @UseInterceptors(FileInterceptor('examFile'))
   async updateOne(
@@ -121,12 +119,9 @@ export class ExamController {
     return this.examService.updateOne(id, updateData);
   }
 
-
   @Delete(':id')
   @Roles(Role.TEACHER, Role.ADMIN)
-  @UseGuards(RolesGuard)
   softDelete(@Param('id', ParseIntPipe) id: number) {
     return this.examService.softDelete(id);
   }
-
 }

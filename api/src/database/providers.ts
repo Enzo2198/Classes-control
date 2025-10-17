@@ -11,6 +11,13 @@ import { ExamSubscriber } from '@/modules/exam/subcriber';
 import { QuestionEntity } from '@/modules/question/entities';
 import { QuestionSubscriber } from '@/modules/question/subcriber';
 import {FileEntity} from "@/modules/file/entities";
+import { UserSubscriber } from '@/modules/user/subcriber';
+import {QuestionExamEntity} from "@/modules/question_exam/entities";
+import {ExamResultSubscriber} from "@/modules/exam_result/subcriber";
+import { AnswerEntity } from '@/modules/answer/entities';
+import { ExamResultEntity } from '@/modules/exam_result/entities';
+import {ExamGroupSubscriber} from "@/modules/exam_group/subcriber";
+import {ExamGroupEntity} from "@/modules/exam_group/entities";
 
 export const databaseProviders = [
   {
@@ -29,13 +36,19 @@ export const databaseProviders = [
           UserClassEntity,
           ExamEntity,
           QuestionEntity,
+          QuestionExamEntity,
+          AnswerEntity,
           FileEntity,
+          ExamResultEntity,
+          ExamGroupEntity
         ],
         subscribers: [
           ClassSubscriber,
           ExamSubscriber,
+          ExamGroupSubscriber,
+          ExamResultSubscriber,
           QuestionSubscriber,
-          ExamSubscriber,
+          UserSubscriber,
         ],
         synchronize: true,
       });

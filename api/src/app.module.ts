@@ -10,6 +10,9 @@ import {ClsModule} from "nestjs-cls";
 import {ConfigModule} from "@nestjs/config";
 import { ExamModule } from './modules/exam/module';
 import { QuestionModule } from './modules/question/module';
+import { PdfViewerModule } from './modules/pdf-viewer/module';
+import {ExamResultModule} from "@/modules/exam_result/module";
+import { ExamGroupModule } from './modules/exam_group/module';
 
 @Module({
   imports: [
@@ -31,8 +34,11 @@ import { QuestionModule } from './modules/question/module';
     StudentModule,
     ClassModule,
     InvitationModule,
+    ExamGroupModule,
     ExamModule,
     QuestionModule,
+    PdfViewerModule,
+    ExamResultModule,
   ],
   controllers: [],
   providers: [],
