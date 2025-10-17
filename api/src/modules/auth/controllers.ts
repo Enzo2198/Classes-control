@@ -5,6 +5,8 @@ import {AuthServiceToken} from "@/share";
 import type {AuthServiceI} from "@/share";
 import {LoginReq} from "@/modules/auth/dtos/login";
 import { RefreshTokenReq } from "./dtos/refreshToken";
+import { ForgotPasswordReq } from "./dtos/forgotPassword";
+import {ResetPasswordReq} from "@/modules/auth/dtos/resetPassword";
 
 @ApiTags('Auth')
 @Controller('/auth')
@@ -24,8 +26,19 @@ export class AuthController {
     return this.authService.login(loginReq);
   }
 
-  @Post('refreshToken')
+  @Post('refresh')
   refreshToken(@Body() refreshTokenReq: RefreshTokenReq) {
     return this.authService.refreshToken(refreshTokenReq);
   }
+
+  @Post('forgot-password')
+  forgotPassword(@Body() forgotPasswordReq: ForgotPasswordReq) {
+    return this.authService.forgotPassword(forgotPasswordReq);
+  }
+
+  @Post('reset-password')
+  resetPassword(@Body() resetPasswordReq: ResetPasswordReq) {
+    return this.authService.resetPassword(resetPasswordReq);
+  }
+
 }

@@ -4,6 +4,9 @@ import {RegisterService} from "./register";
 import {LoginService} from "./login";
 import {RefreshTokenService} from "@/modules/auth/services/refreshToken";
 import {RefreshTokenReq} from "../dtos/refreshToken";
+import {ForgotPasswordService} from "@/modules/auth/services/forgotPassword";
+import { ForgotPasswordReq } from "../dtos/forgotPassword";
+import { ResetPasswordReq } from "../dtos/resetPassword";
 
 @Injectable()
 export class AuthService implements AuthServiceI {
@@ -14,6 +17,8 @@ export class AuthService implements AuthServiceI {
     private readonly loginService: LoginService,
     @Inject(forwardRef(() => RefreshTokenService))
     private readonly refreshTokenService: RefreshTokenService,
+    @Inject(forwardRef(() => ForgotPasswordService))
+    private readonly forgotPasswordService: ForgotPasswordService,
   ) {
   }
 
@@ -27,6 +32,14 @@ export class AuthService implements AuthServiceI {
 
   refreshToken(data: RefreshTokenReq) {
     return this.refreshTokenService.refreshToken(data)
+  }
+
+  forgotPassword(data: ForgotPasswordReq) {
+    return this.forgotPasswordService.forgotPassword(data);
+  }
+
+  resetPassword(data: ResetPasswordReq) {
+    return this.forgotPasswordService.resetPassword(data);
   }
 
 }

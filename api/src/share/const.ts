@@ -16,6 +16,7 @@ export const UserClassEntityRepository = Symbol('UserClassEntityRepository')
 export const InvitationServiceToken = Symbol('InvitationServiceI')
 
 export const AuthServiceToken = Symbol('AuthServiceI')
+export const PasswordResetTokenRepository = Symbol('PasswordResetTokenRepository');
 
 export const QuestionServiceToken = Symbol('QuestionServiceI')
 export const QuestionEntityRepository = Symbol('QuestionEntityRepository')
@@ -38,3 +39,5 @@ export const AnswerEntityRepository = Symbol('AnswerEntityRepository');
 export const FileServiceToken = Symbol('FileServiceI');
 export const FileEntityRepository = Symbol('FileEntityRepository');
 export const CloudinaryProvider = Symbol('CloudinaryProvider');
+
+export const MailServiceToken = Symbol('MailServiceI');

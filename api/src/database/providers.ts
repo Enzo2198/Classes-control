@@ -18,6 +18,7 @@ import { AnswerEntity } from '@/modules/answer/entities';
 import { ExamResultEntity } from '@/modules/exam_result/entities';
 import {ExamGroupSubscriber} from "@/modules/exam_group/subcriber";
 import {ExamGroupEntity} from "@/modules/exam_group/entities";
+import {PasswordResetTokenEntity} from "@/modules/password_reset_token/entities";
 
 export const databaseProviders = [
   {
@@ -40,7 +41,8 @@ export const databaseProviders = [
           AnswerEntity,
           FileEntity,
           ExamResultEntity,
-          ExamGroupEntity
+          ExamGroupEntity,
+          PasswordResetTokenEntity
         ],
         subscribers: [
           ClassSubscriber,

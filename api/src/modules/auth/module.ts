@@ -8,10 +8,15 @@ import {LoginService} from "@/modules/auth/services/login";
 import {AuthService} from "./services/auth";
 import {AuthServiceToken} from "@/share";
 import {RefreshTokenService} from "@/modules/auth/services/refreshToken";
+import { MailModule } from "@/mail/module";
+import {PasswordResetTokenModule} from "@/modules/password_reset_token/module";
+import { ForgotPasswordService } from "./services/forgotPassword";
 
 @Module({
   imports: [
     forwardRef(() => UserModule),
+    MailModule,
+    PasswordResetTokenModule,
 
     JwtModule.registerAsync({
       global: true,
@@ -32,9 +37,10 @@ import {RefreshTokenService} from "@/modules/auth/services/refreshToken";
     LoginService,
     RegisterService,
     RefreshTokenService,
+    ForgotPasswordService,
   ],
 
-  exports: [JwtModule],
+  exports: [JwtModule, AuthServiceToken],
 })
 export class AuthModule {
 }

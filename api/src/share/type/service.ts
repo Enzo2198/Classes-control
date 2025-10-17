@@ -17,6 +17,8 @@ import {RefreshTokenReq} from "@/modules/auth/dtos/refreshToken";
 import {QuestionReqI, QuestionResI} from "./question";
 import {QuestionExamReqI, QuestionExamResI} from "@/share/type/question_exam";
 import {FileReqI, FileResI} from "@/share/type/file";
+import {ResetPasswordReq} from "@/modules/auth/dtos/resetPassword";
+import { ForgotPasswordReq } from "@/modules/auth/dtos/forgotPassword";
 
 export interface BaseServiceI <RequestI, ResponseI> {
   find: (params?: any) => Promise<ResponseI[]>;
@@ -50,6 +52,8 @@ export interface AuthServiceI {
   login: (loginReq: LoginReqI) => Promise<LoginResI>
   register: (data: RegisterReqI) => Promise<{msg: string}>
   refreshToken: (data: RefreshTokenReq) => Promise<LoginResI>
+  resetPassword: (data: ResetPasswordReq) => Promise<{ msg: string }>;
+  forgotPassword: (data: ForgotPasswordReq) => Promise<{ msg: string }>;
 }
 
 export interface QuestionServiceI extends BaseServiceI<QuestionReqI, QuestionResI> {
