@@ -1,7 +1,6 @@
 import type {Member} from "./common.ts";
 
 export interface User extends Member{
-  email: string,
   createdAt: string,
   updatedAt: string,
   isDeleted: boolean,
@@ -9,7 +8,7 @@ export interface User extends Member{
 }
 
 export interface UserProfile {
-  id: string | null,
+  id: number | null,
   url?: string,
 }
 

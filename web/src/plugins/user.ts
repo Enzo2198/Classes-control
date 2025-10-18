@@ -1,62 +1,47 @@
-import type {User, UserAuth} from "../utils";
+import type {User, UserAuth,} from "../utils";
 import {create} from "zustand";
 import {persist} from "zustand/middleware";
-import {decodeToken} from "../utils/jwt.ts";
 
 export interface UserState {
   auth: UserAuth
-  user: User | null
+  user: User
   setAuth: (auth: UserAuth) => void
-
   setUser(user: Partial<User>): void
-
   clear(): void
 }
 
-const defaultUserState: { auth: UserAuth, user: User | null } = {
+const defaultUserState: { auth: UserAuth, user: User } = {
   auth: {accessToken: '', refreshToken: ''},
-  user: null
+  user: {
+    id: "",
+    name: "",
+    role: "",
+    email: "",
+    createdAt: "",
+    updatedAt: "",
+    isDeleted: false,
+    profile: {
+      id: null,
+      url: ""
+    }
+  },
 }
 
 export const useUser = create<UserState>()(
   persist(
     (set, state) => ({
       ...defaultUserState,
-      setAuth: (auth) => {
-        const payload = decodeToken(auth.accessToken)
-
-        if (payload) {
-          set({
-            auth,
-            user: {
-              id: payload.id,
-              name: payload.name ?? '',
-              email: payload.email ?? '',
-              role: payload.role ?? '',
-              createdAt: payload.createdAt ?? '',
-              updatedAt: payload.updatedAt ?? '',
-              isDeleted: payload.isDeleted ?? false,
-              profile: payload.profile ?? {id: '', url: ''}
-            }
-          });
-        } else {
-          set({
-            auth,
-            user: null
-          });
-        }
-      },
-      setUser: (user) =>
-        set({
-          user: {
-            ...(state().user ?? {}),
-            ...user
-          } as User
-        }),
+      setAuth: (auth) => set({ auth }),
+      setUser: (user) => set({
+          user: { ...state().user, ...user }}),
       clear: () => set({...defaultUserState}),
     }),
     {
       name: "user",
+      partialize: (state) =>
+        Object.fromEntries(
+          Object.entries(state).filter(([key]) => ["auth"].includes(key))
+        )
     }
   )
 )

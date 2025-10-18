@@ -6,6 +6,7 @@ import {isLogin} from "./common.tsx";
 import type {FormData, FormErrors, LoginResponse} from "../../utils"
 import {toast} from "react-toastify";
 import {useUser} from "../../plugins/user.ts";
+import * as React from "react";
 
 export function useLogin() {
   const [formData, setFormData] = useState<FormData>({
@@ -61,7 +62,7 @@ export function useLogin() {
     setIsLoading(true)
     try {
       // Call API
-      const response = await postMethod<LoginResponse>('login', {
+      const response = await postMethod<LoginResponse>('/auth/login', {
         email: formData.email,
         password: formData.password
       })

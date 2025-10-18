@@ -10,8 +10,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe({
-    transform: true,
+    transform: true, // IMPORTANT: turn on type auto-transformation
     whitelist: true,
+    transformOptions: {
+      enableImplicitConversion: true,
+    },
   }));
 
   const config = new DocumentBuilder()
@@ -22,6 +25,11 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
+
+  app.enableCors({
+    origin: process.env.VITE_WEB_URL, // allow front-end access
+    credentials: true, // use authentication
+  });
 
   await app.listen(process.env.API_PORT ?? 3000);
 }

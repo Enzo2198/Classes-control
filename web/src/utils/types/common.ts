@@ -1,4 +1,5 @@
 export interface Course {
+  themeColor: string;
   id: string;
   name: string;
   code: string;

@@ -90,7 +90,7 @@ export default function CourseCard({course}: { course: Course }) {
             component="div"
             sx={{fontWeight: 'bold', lineHeight: 1}}
           >
-            {course.memberCount}
+            {course.teachers.length + course.students.length}
           </Typography>
         </Box>
 
