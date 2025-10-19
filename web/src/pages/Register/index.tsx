@@ -26,7 +26,7 @@ export default function Register() {
     setShowConfirmPassword,
     handleChange,
     handleBlur,
-    CreateUser
+    handleSubmit
   } = useRegister()
 
   return (
@@ -206,7 +206,7 @@ export default function Register() {
 
             <Button
               variant="contained"
-              onClick={CreateUser}
+              onClick={handleSubmit}
               sx={{
                 background: "primary.main",
                 color: "white",

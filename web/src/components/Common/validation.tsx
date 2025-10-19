@@ -10,29 +10,3 @@ export const validateConfirmPassword = (newPass: string, confirm: string) =>
 
 export const validateName = (name: string) => name.trim().length > 0;
 
-export function validateRegisterForm(formData: {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}) {
-  const errors: Record<string, string> = {};
-
-  if (!validateName(formData.name)) {
-    errors.name = "Vui lòng nhập tên.";
-  }
-
-  if (!validateEmail(formData.email)) {
-    errors.email = "Email không hợp lệ.";
-  }
-
-  if (!validatePassword(formData.password)) {
-    errors.password = "Mật khẩu tối thiểu 8 ký tự.";
-  }
-
-  if (!validateConfirmPassword(formData.password, formData.confirmPassword)) {
-    errors.confirmPassword = "Mật khẩu không khớp.";
-  }
-
-  return errors;
-}

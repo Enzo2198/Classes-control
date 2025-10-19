@@ -1,11 +1,27 @@
 import {useState} from "react";
 import { useNavigate } from "react-router";
-import { validateEmail, validatePassword } from "../../components";
+import {validateConfirmPassword, validateEmail, validateName, validatePassword} from "../../components";
 import { postMethod } from "../../utils";
 import { toast } from "react-toastify";
+import * as React from "react";
+
+interface FormData {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  role: string;
+}
+
+interface FormErrors {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
 
 export function useRegister() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
     password: "",
@@ -13,14 +29,14 @@ export function useRegister() {
     role: "",
   });
 
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<FormErrors>({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
 
-  const [touched, setTouched] = useState({
+  const [touched, setTouched] = useState<Record<string, boolean>>({
     name: false,
     email: false,
     password: false,
@@ -31,65 +47,85 @@ export function useRegister() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate()
 
+  const validateRegisterForm = (data: FormData): Partial<FormErrors> => {
+    const errors: Partial<FormErrors> = {};
+
+    if (!validateName(data.name)) errors.name = "Vui lòng nhập tên.";
+    if (!validateEmail(data.email)) errors.email = "Email không hợp lệ.";
+    if (!validatePassword(data.password)) errors.password = "Mật khẩu tối thiểu 8 ký tự.";
+    if (!validateConfirmPassword(data.password, data.confirmPassword))
+      errors.confirmPassword = "Mật khẩu không khớp.";
+
+    return errors;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
-    const newFormData = {...formData, [name]: value};
-    const newErrors = {...errors};
+    const { name, value } = e.target;
 
-    if (name === "name") {
-      newErrors.name = value ? "" : "Vui lòng nhập tên.";
-    }
+    setFormData((prev) => {
+      const updatedForm = { ...prev, [name]: value };
 
-    if (name === "email") {
-      newErrors.email = validateEmail(value) ? "" : "Email không hợp lệ.";
-    }
+      // Validate sau khi cập nhật
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name as keyof FormErrors]: validateRegisterForm(updatedForm)[name as keyof FormErrors] ?? "",
+      }));
 
-    if (name === "password") {
-      newErrors.password = validatePassword(value) ? "" : "Mật khẩu tối thiểu 8 ký tự.";
-      newErrors.confirmPassword =
-        newFormData.confirmPassword === value ? "" : "Mật khẩu không khớp.";
-    }
-
-    if (name === "confirmPassword") {
-      newErrors.confirmPassword =
-        value === newFormData.password ? "" : "Mật khẩu không khớp.";
-    }
-
-    setFormData(newFormData);
-    setErrors(newErrors);
+      return updatedForm;
+    });
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const {name} = e.target;
-    setTouched({...touched, [name]: true});
+    const { name } = e.target;
+    setTouched((prev) => ({ ...prev, [name]: true }));
 
-    // Validate field when blur
-    if (name === "name" && !formData.name) {
-      setErrors({...errors, name: "Vui lòng nhập tên."});
-    }
+    const fieldErrors = validateRegisterForm(formData);
+    setErrors((prev) => ({
+      ...prev,
+      [name as keyof FormErrors]: fieldErrors[name as keyof FormErrors] ?? "",
+    }));
   };
 
-  const CreateUser = async () => {
+  const handleSubmit = async () => {
+    // validate toàn bộ form
+    const validationErrors = validateRegisterForm(formData);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors as FormErrors);
+      return;
+    }
+
     try {
-      const response = await postMethod('/master/user/', {
+      const response = await postMethod("/auth/register", {
         name: formData.name,
         email: formData.email,
         role: formData.role,
         status: "confirming",
         password: formData.password,
-      })
+      });
 
-      if(response) {
-        toast.success('Đăng ký thành công')
+      if (response) {
+        toast.success("Đăng ký thành công!");
+        navigate("/login");
       } else {
-        toast.error('Đăng ký thất bại')
+        toast.error("Đăng ký thất bại!");
       }
-
-      navigate('/login')
-    } catch (e) {
-      console.error(e)
+    } catch (err) {
+      console.error(err);
+      toast.error("Có lỗi xảy ra, vui lòng thử lại!");
     }
-  }
+  };
 
-  return { formData, errors, touched, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword, handleChange, handleBlur, CreateUser }
+
+  return {
+    formData,
+    errors,
+    touched,
+    showPassword,
+    setShowPassword,
+    showConfirmPassword,
+    setShowConfirmPassword,
+    handleChange,
+    handleBlur,
+    handleSubmit
+  }
 }
