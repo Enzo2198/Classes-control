@@ -1,6 +1,7 @@
 import type {User, UserAuth,} from "../utils";
 import {create} from "zustand";
 import {persist} from "zustand/middleware";
+import {decodeToken} from "../utils/jwt.ts";
 
 export interface UserState {
   auth: UserAuth
@@ -13,7 +14,7 @@ export interface UserState {
 const defaultUserState: { auth: UserAuth, user: User } = {
   auth: {accessToken: '', refreshToken: ''},
   user: {
-    id: "",
+    id: null,
     name: "",
     role: "",
     email: "",
@@ -29,19 +30,37 @@ const defaultUserState: { auth: UserAuth, user: User } = {
 
 export const useUser = create<UserState>()(
   persist(
-    (set, state) => ({
+    (set, get) => ({
       ...defaultUserState,
-      setAuth: (auth) => set({ auth }),
-      setUser: (user) => set({
-          user: { ...state().user, ...user }}),
-      clear: () => set({...defaultUserState}),
+
+      setAuth: (auth) => {
+        const decoded = decodeToken(auth.accessToken);
+
+        if (decoded) {
+          set({
+            auth,
+            user: {
+              ...get().user,
+              id: decoded.sub ?? "",
+              role: decoded.role ?? "",
+              email: decoded.email ?? get().user.email,
+            },
+          });
+        } else {
+          set({ auth });
+        }
+      },
+
+      setUser: (user) => set({ user: { ...get().user, ...user } }),
+
+      clear: () => set({ ...defaultUserState }),
     }),
     {
       name: "user",
       partialize: (state) =>
         Object.fromEntries(
           Object.entries(state).filter(([key]) => ["auth"].includes(key))
-        )
+        ),
     }
   )
-)
+);

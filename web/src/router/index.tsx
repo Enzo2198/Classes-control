@@ -3,55 +3,53 @@ import Classes from "../pages/Classes"
 import ClassDetail from "../pages/ClassDetail";
 import Login from "../pages/Login"
 import Register from "../pages/Register"
-import {AddNewClass, CreateExam, ExamDetail, ExamsContent, MembersContent, OverviewContent} from "../components";
+import {AddNewClass} from "../components"; // , CreateExam, ExamDetail, ExamsContent, MembersContent, OverviewContent
+import NotFound from "../pages/NotFound";
+import PublicLayout from "./PublicLayout";
+import ProtectedLayout from "./ProtectedLayout.tsx";
+import ExamFlowLayout from "./ExamFlowLayout.tsx";
+import Profile from "../pages/Profile";
+import Invite from "../pages/Invite/index.tsx";
 
 const router = createBrowserRouter([
   {
-    path: "/class",
-    element: <Classes/>,
-  },
-  {
-    path: "/class/:id",
-    element: <ClassDetail />,
+    errorElement: <NotFound />,
     children: [
+      // Public routes
       {
-        index: true,
-        element: <OverviewContent />,
+        element: <PublicLayout />,
+        children: [
+          { path: "/login", element: <Login /> },
+          { path: "/register", element: <Register /> },
+        ],
       },
+
+      // Protected routes
       {
-        path: "overview",
-        element: <OverviewContent />,
+        element: <ProtectedLayout />,
+        children: [
+          { path: "/classes", element: <Classes /> },
+          { path: "/class/add", element: <AddNewClass /> },
+          { path: "/profile", element: <Profile /> },
+
+          // Exam Flow routes
+          {
+            path: "/class/:id",
+            element: <ExamFlowLayout />,
+            children: [
+              { index: true, element: <ClassDetail /> },
+              // { path: "exam/:examGroupId/doing", element: <StudentExamDetail /> },
+            ],
+          },
+        ],
       },
-      {
-        path: "exam",
-        element: <ExamsContent />,
-      },
-      {
-        path: "exam/:examId",
-        element: <ExamDetail />,
-      },
-      {
-        path: "exam/:examId/0",
-        element: <CreateExam />,
-      },
-      {
-        path: "members",
-        element: <MembersContent />,
-      },
+
+      // Public invite + Home
+      { path: "/invite", element: <Invite /> },
+      // { path: "/", element: <Index /> },
+      { path: "*", element: <NotFound /> },
     ],
-  },
-  {
-    path: "/class/add",
-    element: <AddNewClass />,
-  },
-  {
-    path: "/login",
-    element: <Login/>,
-  },
-  {
-    path: "/register",
-    element: <Register/>,
   },
 ]);
 
-export default router
+export default router;

@@ -8,7 +8,6 @@ const mockCourses: Course[] = [];
 
 export function useClassListPage() {
   const [courses, setCourses] = useState<Course[]>([])
-  console.log(courses)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState<string>("")
@@ -31,7 +30,7 @@ export function useClassListPage() {
       try {
         if (isMounted) setLoading(true)
 
-        const data = await getMethod<Course[]>('/master/class/')
+        const data: Course[] = await getMethod('/classes')
 
         if (!isMounted) return
 

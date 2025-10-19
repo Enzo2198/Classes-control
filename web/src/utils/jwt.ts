@@ -9,6 +9,6 @@ export const decodeToken = (token: string) => {
     return JSON.parse(payloadJson)
   } catch (e) {
     console.error('Decode token error:', e)
-    return false
+    return null
   }
 }

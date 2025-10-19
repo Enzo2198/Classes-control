@@ -22,7 +22,7 @@ export function useClassroomLayout() {
   const fetchMembers = useCallback(async () => {
     if (!id) return;
     try {
-      const response = await getMethod<Classroom>(`master/class/${id}`);
+      const response: Classroom = await getMethod(`master/class/${id}`);
       setClassInfo(response)
       setMembers(response?.users ?? [])
     } catch (error) {

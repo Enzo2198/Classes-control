@@ -62,7 +62,7 @@ export function useLogin() {
     setIsLoading(true)
     try {
       // Call API
-      const response = await postMethod<LoginResponse>('/auth/login', {
+      const response: LoginResponse = await postMethod('/auth/login', {
         email: formData.email,
         password: formData.password
       })
@@ -73,8 +73,8 @@ export function useLogin() {
 
       // Save storage
       useUser.getState().setAuth({
-        accessToken: response.access,
-        refreshToken: response.refresh
+        accessToken: response.accessToken,
+        refreshToken: response.refreshToken,
       })
 
       navigate('/classes')

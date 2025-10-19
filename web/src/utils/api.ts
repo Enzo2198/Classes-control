@@ -1,41 +1,46 @@
-import { api } from '../plugins/api.ts'
+import type {AxiosRequestConfig} from "axios";
+import {api} from "../plugins/api.ts";
 
-export const getMethod = async <T>(endpoint: string): Promise<T | null> => {
+export const getMethod = async (endpoint: string, config?: AxiosRequestConfig) => {
+  try{
+    const {data} = await api.get(endpoint, config ?? {});
+    return data;
+  }catch(e){
+    console.log(e);
+  }
+
+  return null;
+}
+
+export const postMethod = async (endpoint: string, payload: any, config?: AxiosRequestConfig) => {
+  try{
+    const {data} = await api.post(endpoint, payload, config ?? {});
+    return data;
+  }catch(e){
+    console.log(e);
+  }
+
+  return null;
+}
+
+export const putMethod = async (endpoint: string, payload: any, config?: AxiosRequestConfig) => {
   try {
-    const { data } = await api.get<T>(endpoint);
+    const {data} = await api.put(endpoint, payload, config ?? {});
     return data;
   } catch (e) {
-    console.error('GET error', e)
-    return null;
+    console.log(e);
   }
-};
 
-export const postMethod = async <T>(endpoint: string, payload: unknown): Promise<T | null> => {
-  try {
-    const { data } = await api.post<T>(endpoint, payload)
-    return data
-  } catch (e) {
-    console.error('POST error:', e)
-    return null
-  }
+  return null;
 }
 
-export const putMethod = async <T>(endpoint: string, payload: unknown): Promise<T | null> => {
+export const deleteMethod = async (endpoint: string, config?: AxiosRequestConfig) => {
   try {
-    const { data } = await api.put<T>(endpoint, payload)
-    return data
+    const {data} = await api.delete(endpoint, config ?? {});
+    return data;
   } catch (e) {
-    console.error('PUT error:', e)
-    return null
+    console.log(e);
   }
-}
 
-export const deleteMethod = async <T>(endpoint: string): Promise<T | null> => {
-  try {
-    const { data } = await api.delete<T>(endpoint)
-    return data
-  } catch (e) {
-    console.error('DELETE error:', e)
-    return null
-  }
+  return null;
 }

@@ -12,7 +12,7 @@ export class UserController {
     private readonly userService: share.UserServiceI,
   ) {}
 
-  @Post('change_password')
+  @Post('change-password')
   changePassword(@Body() data: ChangePasswordReq) {
     return this.userService.changePassword(data);
   }

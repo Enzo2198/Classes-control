@@ -8,7 +8,7 @@ export interface Course {
 }
 
 export interface Member {
-  id: string;
+  id: number | null;
   name: string;
   role: string;
   email: string;
@@ -30,7 +30,7 @@ export interface FormErrors extends FormData {
 }
 
 export interface LoginResponse {
-  access: string;
-  refresh: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
