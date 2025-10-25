@@ -1,67 +1,51 @@
-import {type Course, getMethod} from "../../utils";
+import {type Course, getMethod, getUserInfo, getValidAccessToken} from "../../utils";
 import {useEffect, useMemo, useState} from "react";
-import {isLogin} from "../Login/common.tsx";
 import {useNavigate} from "react-router";
-import {useUser} from "../../plugins/user.ts";
 
-const mockCourses: Course[] = [];
-
-export function useClassListPage() {
+export function useClassPage() {
+  const [user, setUser] = useState({name: "", role: ""})
   const [courses, setCourses] = useState<Course[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState<string>("")
+  const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate()
-  const {user} = useUser();
 
   const displayAddClassButton = user?.role === 'teacher' ? 'inline-flex' : 'none';
+
   const filteredCourses: Course[] = useMemo(() => courses.filter(course => {
     return course.name.toLowerCase().includes(search.toLowerCase());
   }), [courses, search]);
 
   useEffect(() => {
-    let isMounted = true
-
-    const fetchData = async () => {
-      if (!isLogin()) {
-        navigate('/login')
-        return
-      }
-      try {
-        if (isMounted) setLoading(true)
-
-        const data: Course[] = await getMethod('/classes')
-
-        if (!isMounted) return
-
-        if (!data) {
-          setError('Load data thất bại')
-          setCourses(mockCourses)
-          return;
+      const onMounted = async () => {
+        const accessToken: string | null = await getValidAccessToken()
+        if (!accessToken) {
+          console.error("Access token not found")
+          navigate("/login")
+          return
         }
 
-        setCourses(data);
-        setError(null);
-      } catch (e) {
-        if (!isMounted) return
+        const {name, role} = getUserInfo(accessToken);
+        setUser({name, role});
 
-        setError('Không thể tải danh sách lớp học');
-        setCourses(mockCourses);
-        console.error(e);
-      } finally {
-        if (isMounted) setLoading(false);
+        try {
+          const coursesData: Course[] = await getMethod('/classes', {
+            headers: {
+              Authorization: `Bearer ${accessToken}`
+            }
+          })
+          setCourses(coursesData)
+        } catch (err) {
+          console.error("Error on loading courses", err)
+        } finally {
+          setIsLoading(false)
+        }
       }
-    }
-    fetchData()
-
-    return () => {
-      isMounted = false
-    };
-  }, [navigate])
+      onMounted()
+    }, []);
 
   const toAddCourseClick = () => {
     navigate('/class/add');
   }
 
-  return {loading, error, toAddCourseClick, displayAddClassButton, setSearch, filteredCourses}
+  return {toAddCourseClick, displayAddClassButton, setSearch, filteredCourses, courses, isLoading}
 }

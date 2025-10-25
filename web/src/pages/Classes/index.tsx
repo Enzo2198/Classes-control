@@ -1,29 +1,25 @@
-import {Container, Box, Typography, CircularProgress, Button, TextField, InputAdornment} from "@mui/material";
-import {GHeader, ClassGrid} from "../../components";
-import {useClassListPage} from "./classes.tsx";
+import {Container, Box, Typography, Button, TextField, InputAdornment} from "@mui/material";
+import {GHeader, ClassGrid, Loading} from "../../components";
+import {useClassPage} from "./classes.tsx";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import type {ChangeEvent} from "react";
 
 
-export default function classListPage() {
-  const {loading, error, toAddCourseClick, displayAddClassButton, setSearch, filteredCourses} = useClassListPage()
+export default function ClassPage() {
+  const {
+    toAddCourseClick,
+    displayAddClassButton,
+    setSearch,
+    filteredCourses,
+    isLoading,
+  } = useClassPage()
 
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" mt={4}>
-        <CircularProgress/>
-      </Box>
-    );
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value)
   }
 
-  if (error) {
-    return (
-      <Box textAlign="center" mt={4}>
-        <Typography color="error">{error}</Typography>
-      </Box>
-    );
-  }
+  if (isLoading) return <Loading />
 
   return (
     <>
@@ -39,7 +35,9 @@ export default function classListPage() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          mb: 2
+          mb: 2,
+          flexDirection: { xs: 'column', sm: 'row' },
+          gap: 2,
         }}>
           <Typography variant="h5" component="h1" gutterBottom sx={{fontWeight: 'bold', color: '#333'}}>
             Danh sách lớp học
@@ -48,8 +46,8 @@ export default function classListPage() {
           <Box sx={{display: 'flex', alignItems: 'center', gap: 2, my: 2}}>
             <TextField
               variant="outlined"
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
-              placeholder="Tìm kiếm"
+              onChange={handleSearchChange}
+              placeholder="Tìm kiếm lớp học..."
               size="small"
               sx={{
                 flexGrow: 1,

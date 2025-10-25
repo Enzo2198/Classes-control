@@ -11,11 +11,11 @@ export default function CircularIndeterminate() {
     }}>
       <Box>
         <Box sx={{textAlign: 'center'}}>
-          <CircularProgress size={80}/>
+          <CircularProgress size={150}/>
         </Box>
 
         <Box sx={{mt: 2, fontSize: 26, fontWeight: 'bold'}}>
-          Checking active login status, please wait...
+          Vui lòng chờ trong giây lát ...!
         </Box>
       </Box>
     </Box>

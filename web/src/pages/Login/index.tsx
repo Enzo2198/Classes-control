@@ -1,10 +1,20 @@
-import { Box, Button, Checkbox, Stack, Typography, Paper, Link } from "@mui/material";
+import { Box, Button, Checkbox, Stack, Typography, Paper, Link, TextField } from "@mui/material";
 import { NavLink } from "react-router";
-import { FloatingInput } from "../../components";
-import { useLogin } from "./login.tsx";
+// import { FloatingInput } from "../../components";
+import { useLogin } from "./login.ts";
 
 export default function Login() {
-  const { formData, errors, isLoading, isFormValid, handleChange, handleLogin } = useLogin();
+  const {
+    formData,
+    helperTexts,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    setRememberMe,
+    rememberMe,
+    touched,
+    isLoading
+  } = useLogin();
 
   return (
     <Box
@@ -67,6 +77,8 @@ export default function Login() {
 
         {/* Right side - Form section */}
         <Box
+          component="form"
+          onSubmit={handleSubmit}
           sx={{
             flex: 1,
             px: 8,
@@ -79,27 +91,33 @@ export default function Login() {
         >
           <Stack spacing={2} mb={3}>
             {/* Logo */}
-            <Box textAlign="center">
+            <Box textAlign="center" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Typography variant="h3" fontWeight="bold"
-                sx={{
-                  fontSize: "2.5rem",
-                  letterSpacing: "1px"
-                }}
+                          sx={{
+                            fontSize: "2.5rem",
+                            letterSpacing: "1px",
+                            display: 'flex',
+                            alignItems: 'center',
+                          }}
               >
                 <Box component="span" sx={{mr: 1}}>
-                  <img src="https://bk-exam-public.s3.ap-southeast-1.amazonaws.com/logo2.png" alt="logo" width="40" height="40"/>
+                  <img src="https://bk-exam-public.s3.ap-southeast-1.amazonaws.com/logo2.png" alt="logo" width="40" height="40" style={{ display: 'block' }}/>
                 </Box>
                 <Typography component="span" color="primary.main"
                   sx={{
                     pr: "5px",
-                    fontSize: "inherit",
+                    fontSize: "50px",
+                    fontWeight: 600,
+                    lineHeight: 1,
                   }}
                 >
                   BK
                 </Typography>
                 <Typography component="span" color="#ff9800"
                   sx={{
-                    fontSize: "inherit",
+                    fontSize: "50px",
+                    fontWeight: 600,
+                    lineHeight: 1,
                   }}
                 >
                   Star
@@ -124,20 +142,20 @@ export default function Login() {
             {/* Subtitle */}
             <Box textAlign="center" mb={4}>
               <Typography
-                variant="body2"
+                variant="body1"
                 sx={{
                   color: "#666",
-                  fontSize: "0.9rem",
+                  fontSize: "1rem",
                   lineHeight: 1.5,
                 }}
               >
                 Cung cấp giải pháp toàn diện cho
               </Typography>
               <Typography
-                variant="body2"
+                variant="body1"
                 sx={{
                   color: "#666",
-                  fontSize: "0.9rem",
+                  fontSize: "1rem",
                 }}
               >
                 lớp học thông minh
@@ -145,27 +163,33 @@ export default function Login() {
             </Box>
 
             {/* Form inputs */}
-            <FloatingInput
+            <TextField
               label="Nhập địa chỉ email"
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              error={errors.email}
+              onBlur={handleBlur}
+              error={touched.email && Boolean(helperTexts.email)}
+              helperText={touched.email && helperTexts.email}
             />
 
-            <FloatingInput
+            <TextField
               label="Nhập mật khẩu"
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              error={errors.password}
+              onBlur={handleBlur}
+              error={touched.password && Boolean(helperTexts.password)}
+              helperText={touched.password && helperTexts.password}
             />
 
             {/* Remember me checkbox */}
             <Box display="flex" alignItems="center" mt={1} mb={3}>
               <Checkbox
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
                 sx={{
                   padding: "8px",
                 }}
@@ -184,11 +208,11 @@ export default function Login() {
 
             {/* Login button */}
             <Button
+              type="submit"
               variant="contained"
               color="primary"
               size="large"
               fullWidth
-              onClick={handleLogin}
               sx={{
                 height: "48px",
                 fontSize: "1rem",
@@ -197,9 +221,13 @@ export default function Login() {
                 borderRadius: "4px",
                 '&:hover': {
                   background: '#1565c0'
+                },
+                '&:disabled': {
+                  backgroundColor: '#e0e0e0',
+                  color: '#9e9e9e'
                 }
               }}
-              disabled={isLoading || !isFormValid}
+              disabled={isLoading}
             >
               {isLoading ? 'Đang đăng nhập' : 'Đăng nhập'}
             </Button>

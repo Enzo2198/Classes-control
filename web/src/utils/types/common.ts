@@ -29,6 +29,8 @@ export interface FormErrors extends FormData {
   form?: string;
 }
 
+export interface LoginForm extends FormData {}
+
 export interface LoginResponse {
   accessToken: string;
   refreshToken: string;

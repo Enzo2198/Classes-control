@@ -1,9 +1,9 @@
 import type {AxiosRequestConfig} from "axios";
-import {api} from "../plugins/api.ts";
+import apiClient from "../auth/interceptors";
 
 export const getMethod = async (endpoint: string, config?: AxiosRequestConfig) => {
   try{
-    const {data} = await api.get(endpoint, config ?? {});
+    const {data} = await apiClient.get(endpoint, config ?? {});
     return data;
   }catch(e){
     console.log(e);
@@ -14,7 +14,7 @@ export const getMethod = async (endpoint: string, config?: AxiosRequestConfig) =
 
 export const postMethod = async (endpoint: string, payload: any, config?: AxiosRequestConfig) => {
   try{
-    const {data} = await api.post(endpoint, payload, config ?? {});
+    const {data} = await apiClient.post(endpoint, payload, config ?? {});
     return data;
   }catch(e){
     console.log(e);
@@ -25,7 +25,7 @@ export const postMethod = async (endpoint: string, payload: any, config?: AxiosR
 
 export const putMethod = async (endpoint: string, payload: any, config?: AxiosRequestConfig) => {
   try {
-    const {data} = await api.put(endpoint, payload, config ?? {});
+    const {data} = await apiClient.put(endpoint, payload, config ?? {});
     return data;
   } catch (e) {
     console.log(e);
@@ -36,7 +36,7 @@ export const putMethod = async (endpoint: string, payload: any, config?: AxiosRe
 
 export const deleteMethod = async (endpoint: string, config?: AxiosRequestConfig) => {
   try {
-    const {data} = await api.delete(endpoint, config ?? {});
+    const {data} = await apiClient.delete(endpoint, config ?? {});
     return data;
   } catch (e) {
     console.log(e);

@@ -6,6 +6,7 @@
     align-items: center;
     background: #fff;
     justify-content: space-between;
+    position: relative;
 }
 
 .header-logo {
@@ -14,6 +15,7 @@
     font-weight: 700;
     align-items: center;
     gap: 0.5rem;
+    flex-shrink: 0;
 }
 
 .logo-text {
@@ -22,8 +24,7 @@
     color: #113249;
 }
 
-
-
-
-
-
+.header .MuiStack-root {
+    flex: 1;
+    justify-content: flex-end;
+}

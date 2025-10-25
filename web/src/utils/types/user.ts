@@ -11,8 +11,3 @@ export interface UserProfile {
   id: number | null,
   url?: string,
 }
-
-export interface UserAuth {
-  accessToken: string,
-  refreshToken: string,
-}

@@ -27,31 +27,17 @@ function stringToColor(name: string): string {
   return "#" + "00000".substring(0, 6 - c.length) + c;
 }
 
-interface AvatarUser {
-  name: string;
-  profile?: {url?: string};
-}
-
 interface AvatarDefaultProps {
-  user: AvatarUser | null,
+  fullName: string,
   width?: number | string,
   height?: number | string,
   mr?: number | string
 }
 
-export default function AvatarDefault({user, mr = 2}: AvatarDefaultProps) {
-  const hasAvatar = !!user?.profile?.url
-  const name = user?.name ?? ''
-
+export default function AvatarDefault({fullName, width=40, height=40, mr = 2}: AvatarDefaultProps) {
   return (
-    <Avatar
-      src={hasAvatar ? user?.profile?.url : undefined}
-      sx={{
-        backgroundColor: hasAvatar ? 'transparent' : stringToColor(name),
-        mr
-      }}
-    >
-      {!hasAvatar && getInitials(name)}
+    <Avatar sx={{backgroundColor: stringToColor(fullName), width, height, mr}}>
+      {getInitials(fullName)}
     </Avatar>
   )
 }
