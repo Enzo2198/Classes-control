@@ -1,6 +1,6 @@
 import {Container, Box, Typography, Button, TextField, InputAdornment} from "@mui/material";
 import {GHeader, ClassGrid, Loading} from "../../components";
-import {useClassPage} from "./classes.tsx";
+import {useClassPage} from "./classes.ts";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import type {ChangeEvent} from "react";

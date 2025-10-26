@@ -1,7 +1,7 @@
-import type {Member} from "./common.ts";
+import type {Course} from "./common.ts";
 
 export interface MembersContentProps {
-  members: Member[]
+  course: Course
 }
 
 export interface HeaderMember {

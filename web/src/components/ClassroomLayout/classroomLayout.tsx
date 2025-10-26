@@ -1,68 +1,96 @@
-import {useLocation, useParams} from 'react-router-dom';
-import {useCallback, useEffect, useState} from "react";
-import {type Classroom, getMethod, type Member} from "../../utils";
-
-interface Exam {
-  id: string;
-  [key: string]: string;
-}
+import {useLocation, useNavigate, useParams} from 'react-router-dom';
+import {useEffect, useMemo, useState} from "react";
+import {type Course, type ExamGroup, getMethod, getValidAccessToken} from "../../utils";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import PeopleIcon from "@mui/icons-material/People";
 
 export function useClassroomLayout() {
-  const {id} = useParams<{ id: string }>();
+  const {id: classId} = useParams();
   const location = useLocation();
-
-  const [classInfo, setClassInfo] = useState<Classroom | null>(null);
-  console.log(classInfo)
-  const [members, setMembers] = useState<Member[]>([]);
-  const [exams, setExams] = useState<any[]>([]);
+  const navigate = useNavigate();
+  const [examGroups, setExamGroups] = useState<ExamGroup[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
 
-  // Fetch Members
-  const fetchMembers = useCallback(async () => {
-    if (!id) return;
-    try {
-      const response: Classroom = await getMethod(`master/class/${id}`);
-      setClassInfo(response)
-      setMembers(response?.users ?? [])
-    } catch (error) {
-      console.error('Failed to fetch members:', error);
-      setError('Failed to fetch members')
-    }
-  }, [id])
+  const [course, setCourse] = useState<Course>({
+    id: 0,
+    code: '',
+    name: '',
+    teachers: [],
+    students: []
+  });
 
-  // Fetch Exams
-  const fetchExams = useCallback(async () => {
-    if (!id) return;
-    try {
-      const response = await getMethod(`exam_group/?class_id=${id}`);
-      setExams(response as Exam[]);
-    } catch (error) {
-      console.error('Failed to fetch exams:', error);
-      setError('Failed to fetch exams')
+  // UseMemo to only compute again the menuItems when classId changes
+  const menuItems = useMemo(() => {
+    return [
+      {
+        text: "Tổng quan",
+        path: `/class/${classId}`,
+        segment: undefined,
+        icon: <DashboardIcon/>,
+      },
+      {
+        text: "Bài thi",
+        path: `/class/${classId}/exam`,
+        segment: "exam",
+        icon: <AssignmentIcon/>,
+      },
+      {
+        text: "Thành viên",
+        path: `/class/${classId}/member`,
+        segment: "member",
+        icon: <PeopleIcon/>,
+      },
+
+
+    ]
+  }, [classId]);
+
+  const isActive = (pathSegment?: string) => {
+    if (!classId) return false;
+
+    const basePath = `/class/${classId}`;
+    const currentPath = location.pathname.endsWith('/') && location.pathname.length > 1
+      ? location.pathname.slice(0, -1)
+      : location.pathname;
+
+    if (!pathSegment) {
+      return currentPath === basePath;
     }
-  }, [id]);
+    return currentPath === `${basePath}/${pathSegment}`;
+  }
 
   useEffect(() => {
-    if (!id) return;
-    setLoading(true)
-    Promise.all([fetchMembers(), fetchExams()])
-      .catch(error => console.error(error))
-      .finally(() => setLoading(false))
-  }, [id, fetchMembers, fetchExams]);
+    const onMounted = async () => {
+      const accessToken: string | null = await getValidAccessToken()
+      if (!accessToken) {
+        console.error("No valid access token, redirecting to login page");
+        navigate("/login");
+        return;
+      }
 
-  // Selected index
-  const pathname = location.pathname;
-  const selectedIndex = pathname.includes('/exam') ? 1
-    : pathname.includes('/members') ? 2 : 0;
+      try {
+        const [courseData, examGroupsData] = await Promise.all([
+          getMethod(`/classes/${classId}`, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }),
 
-  return {
-    selectedIndex,
-    classInfo,
-    exams,
-    members,
-    refetch: {members: fetchMembers, exams: fetchExams},
-    loading,
-    error,
-  };
+          getMethod(`/exam_groups?class_id=${classId}`, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          })
+        ])
+        setCourse(courseData);
+        setExamGroups(examGroupsData);
+      } catch (err) {
+        console.error('Error loading courses data:', err)
+        navigate("/classes")
+      } finally {
+        setLoading(false);
+      }
+    }
+    onMounted();
+  }, [classId]);
+
+
+  return {course, loading, examGroups, menuItems, isActive,};
 }

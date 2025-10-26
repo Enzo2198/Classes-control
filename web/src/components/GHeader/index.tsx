@@ -20,7 +20,7 @@ import Divider from '@mui/material/Divider';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import Typography from "@mui/material/Typography";
 import {Link, useNavigate} from "react-router";
-import {useClassPage} from "../../pages/Classes/classes.tsx";
+import {useClassPage} from "../../pages/Classes/classes.ts";
 import useHeader from "./header.ts";
 import {AvatarDefault} from "../index.tsx";
 
@@ -132,7 +132,7 @@ export default () => {
           <MenuIcon/>
         </IconButton>
 
-        <Box sx={{display: {xs: 'none', lg: 'block'}}}>
+        <Box /*sx={{display: {xs: 'none', lg: 'block'}}}*/>
           <img src="https://bk-exam-public.s3.ap-southeast-1.amazonaws.com/logo2.png"
                alt="logo" width="40" height="40"/>
         </Box>

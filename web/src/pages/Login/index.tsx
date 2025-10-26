@@ -1,7 +1,7 @@
-import { Box, Button, Checkbox, Stack, Typography, Paper, Link, TextField } from "@mui/material";
-import { NavLink } from "react-router";
+import {Box, Button, Checkbox, Stack, Typography, Paper, Link, TextField} from "@mui/material";
+import {NavLink} from "react-router";
 // import { FloatingInput } from "../../components";
-import { useLogin } from "./login.ts";
+import {useLogin} from "./login.ts";
 
 export default function Login() {
   const {
@@ -91,19 +91,22 @@ export default function Login() {
         >
           <Stack spacing={2} mb={3}>
             {/* Logo */}
-            <Box textAlign="center" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Typography variant="h3" fontWeight="bold"
-                          sx={{
-                            fontSize: "2.5rem",
-                            letterSpacing: "1px",
-                            display: 'flex',
-                            alignItems: 'center',
-                          }}
+            <Box textAlign="center" sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+              <Typography
+                variant="h3" fontWeight="bold"
+                sx={{
+                  fontSize: "2.5rem",
+                  letterSpacing: "1px",
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
               >
                 <Box component="span" sx={{mr: 1}}>
-                  <img src="https://bk-exam-public.s3.ap-southeast-1.amazonaws.com/logo2.png" alt="logo" width="40" height="40" style={{ display: 'block' }}/>
+                  <img src="https://bk-exam-public.s3.ap-southeast-1.amazonaws.com/logo2.png" alt="logo" width="40"
+                       height="40" style={{display: 'block'}}/>
                 </Box>
-                <Typography component="span" color="primary.main"
+                <Typography
+                  component="span" color="primary.main"
                   sx={{
                     pr: "5px",
                     fontSize: "50px",
@@ -113,7 +116,8 @@ export default function Login() {
                 >
                   BK
                 </Typography>
-                <Typography component="span" color="#ff9800"
+                <Typography
+                  component="span" color="#ff9800"
                   sx={{
                     fontSize: "50px",
                     fontWeight: 600,

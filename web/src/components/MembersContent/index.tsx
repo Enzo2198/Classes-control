@@ -1,48 +1,68 @@
-import {Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material";
-import type {Member, HeaderMember, MembersContentProps} from "../../utils";
-import {useOutletContext} from "react-router";
+import {Box, Chip, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material";
+import type {Member, MembersContentProps} from "../../utils";
 
-const headers: HeaderMember[] = [
-  {name: 'id', text: 'NO.'},
-  {name: 'name', text: 'HỌ TÊN'},
-  {name: 'position', text: 'VỊ TRÍ'},
-  {name: 'key', text: ''}
-]
+export default function MembersContent({course}: MembersContentProps) {
+  // swapping to have teachers at the head of the array
+  const {teachers, students} = course;
+  const members: Member[] = [...teachers, ...students];
 
-export default function MembersContent() {
-  const { members } = useOutletContext<MembersContentProps>();
   return (
-    <Box sx={{mt: 3}}>
-      <Typography variant="h4" fontWeight="bold" sx={{mb: 2}}>
-        Danh sách thành viên
-      </Typography>
-
+    <Box sx={{mt: 3, overflowY: 'auto'}}>
       <TableContainer component={Paper} elevation={0} sx={{p: 2}}>
+        <Typography variant="h6" fontWeight="bold" sx={{mb: 1}} color={'primary'}>
+          Danh sách thành viên
+        </Typography>
         <Table>
           <TableHead>
             <TableRow>
-              {
-                headers.map((header: HeaderMember) => {
-                  return <TableCell sx={{fontWeight: 'bold', color: '#666'}} key={header.name}>{header.text}</TableCell>
-                })
-              }
+              <TableCell sx={{fontWeight: 'bold', color: '#666'}}>NO.</TableCell>
+              <TableCell sx={{fontWeight: 'bold', color: '#666'}}>HỌ TÊN</TableCell>
+              <TableCell sx={{fontWeight: 'bold', color: '#666'}}>VỊ TRÍ</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {members.map((member: Member) => (
+            {members.map((member: Member, index: number) => (
               <TableRow
                 key={member.id}
-                sx={Number(member.id) % 2 === 0 ? {} : {backgroundColor: '#f5f9fc'}}
+                sx={index % 2 !== 0 ? {} : {backgroundColor: '#f0f0f0'}}
               >
-                <TableCell>{member.id}</TableCell>
+                <TableCell>{index + 1}</TableCell>
                 <TableCell>{member.name}</TableCell>
-                <TableCell>{member.role}</TableCell>
-                <TableCell></TableCell>
+                <TableCell>
+                  <Chip
+                    label={member.role === "student"?"Học sinh":"Giáo viên"}
+                    size="small"
+                    sx={{
+                      backgroundColor: member.role === 'teacher' ? 'rgba(255, 118, 117, 0.5)' : 'rgb(46, 204, 113)',
+                      color: 'white',
+                    }}
+                  />
+                </TableCell>
+                <TableCell align="right">
+                  {member.role === 'teacher' && (
+                    <Chip
+                      icon={<KeyIcon/>}
+                      size="small"
+                      sx={{backgroundColor: '#f9ca24', color: '#fff'}}
+                    />
+                  )}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
     </Box>
+  );
+}
+
+function KeyIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
   );
 }

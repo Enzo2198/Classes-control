@@ -33,7 +33,9 @@ export function useLogin() {
 
     switch (name) {
       case "email":
-        if (!value) error = "Vui lòng nhập email"
+        if (!value) {
+          error = "Vui lòng nhập email"
+        }
         else if (!validateEmail(value)) error = "Địa chỉ email không hợp lệ"
         break;
 
@@ -58,7 +60,7 @@ export function useLogin() {
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
-    setTouched(prev => ({...prev, [name]: value}))
+    setTouched(prev => ({...prev, [name]: true}))
     validateField(name as keyof LoginForm, value)
   }
 

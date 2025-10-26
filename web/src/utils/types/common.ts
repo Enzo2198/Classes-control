@@ -1,6 +1,5 @@
 export interface Course {
-  themeColor: string;
-  id: string;
+  id: number;
   name: string;
   code: string;
   teachers: Member[];
