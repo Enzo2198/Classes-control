@@ -1,80 +1,67 @@
-import {useState } from "react";
-import type { Test } from "../../utils";
-import { Box, Grid, Paper, styled, Typography} from "@mui/material";
-import { Description as DescriptionIcon } from '@mui/icons-material';
-import dayjs from "dayjs";
-import {useExams} from "../ClassroomLayout/examsProvider.tsx";
+import {useEffect, useMemo, useState} from "react";
+import {type Course, type ExamGroup, getMethod, getUserInfo, getValidAccessToken} from "../../utils";
 import {useNavigate} from "react-router";
-import {useParams} from "react-router-dom";
 
-export function useExamsContent() {
-  const { exams } = useExams();
+export function useExamsContent({course}: { course: Course }) {
+  const navigate = useNavigate();
+  const [userRole, setUserRole] = useState('student');
+  const {id: courseId} = course;
+
   const [searchQuery, setSearchQuery] = useState('');
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  }
 
-  // Filter time exams
-  const now = dayjs();
-  const activeExams = exams.filter((exam) => dayjs(exam.start_time).isBefore(now, 'day'));
-  const pendingExams = exams.filter((exam) => dayjs(exam.start_time).isAfter(now, 'day'));
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const handleCreateExamGroup = () => {
+    setIsOpenDialog(true);
+  }
+  const [examGroups, setExamGroups] = useState<ExamGroup[]>([]);
 
+  const filteredExamGroups: ExamGroup[] = useMemo(() =>
+      examGroups.filter(examGroup =>
+        examGroup.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    , [examGroups, searchQuery]);
 
-  // Handle search input change
-  const handleSearchChange = (event: any) => {
-    setSearchQuery(event.target.value);
-  };
+  function toDateOnly(date: Date): Date {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
 
-  const Item = styled(Paper)(({theme}) => ({
-    backgroundColor: '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: (theme.vars ?? theme).palette.text.secondary,
-    ...theme.applyStyles('dark', {
-      backgroundColor: '#1A2027',
-    }),
-  }));
+  const today: Date = toDateOnly(new Date());
 
-  const renderExamList = (examList: Test[]) => {
-    const navigate = useNavigate();
-    const { id } = useParams<{ id: string }>();
+  const openExamGroups: ExamGroup[] = filteredExamGroups.filter(
+    examGroup => toDateOnly(new Date(examGroup.start_time)) <= today
+  )
 
-    if (examList.length === 0) {
-      return <Typography color="text.secondary">0</Typography>;
+  const notOpenExamGroups: ExamGroup[] = filteredExamGroups.filter(
+    examGroup => toDateOnly(new Date(examGroup.start_time)) > today
+  )
+
+  const onMounted = async () => {
+    const accessToken: string | null = await getValidAccessToken()
+    if (!accessToken) {
+      console.error('No valid access token, redirecting to login page');
+      navigate('/login');
+      return;
     }
+    const {role} = getUserInfo(accessToken)
+    setUserRole(role)
 
-    return (
-      <Grid container spacing={2} alignItems="stretch">
-        {examList.map((test: Test) => (
-          <Grid size={{xs: 12, md: 6, lg: 4}} key={test.id} sx={{borderLeft: '5px solid #0A78D1', display: 'flex'}}>
-            <Item
-              sx={{ flex: 1, cursor: 'pointer' }}
-              onClick = {() => navigate(`/class/${id}/exam/${test.id}`)}
-            >
-              <Paper elevation={0} sx={{display: 'flex', alignItems: 'center', height: '100%'}}>
-                <Box
-                  sx={{display: 'flex', alignItems: 'flex-start', gap: '20px', p: 2, mr: 2}}
-                >
-                  <DescriptionIcon sx={{fontSize: 48, color: '#3498db'}}/>
+    const examGroupsData: ExamGroup[] = await getMethod(`/exam_groups?class_id=${course.id}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    setExamGroups(examGroupsData);
+    setIsLoading(false);
+  }
 
-                  <Box>
-                    <Typography variant="body1" fontWeight="medium" textAlign="left" sx={{ mb: 1 }}>
-                      {test.name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" textAlign="left" fontWeight="medium">
-                      Ngày bắt đầu:{" "}
-                      {test.start_time ? test.start_time.split(" ")[0] : "Chưa xác định"}
-                    </Typography>
-                  </Box>
-                </Box>
-              </Paper>
-            </Item>
-          </Grid>
-        ))}
-      </Grid>
-    );
+  useEffect(() => {
+    onMounted();
+  }, [])
+
+  return {
+    courseId, userRole, handleSearchChange, openExamGroups, onMounted, notOpenExamGroups, searchQuery,
+    isDeleting, setIsDeleting, isOpenDialog, setIsOpenDialog, isLoading, handleCreateExamGroup
   };
-
-  // Handle create test button click
-  const [open, setOpen] = useState(false);
-
-  return { searchQuery, activeExams, pendingExams, handleSearchChange, renderExamList, open, setOpen };
 }

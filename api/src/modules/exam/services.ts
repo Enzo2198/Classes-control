@@ -28,6 +28,9 @@ export class ExamService extends BaseService<ExamEntity, ExamReqI, ExamResI>
         'exam.id AS id',
         'exam.name As name',
         'exam.code As code',
+        'exam.exam_group_id::int As exam_group_id',
+        'exam.total_time As total_time',
+        'exam.number_of_question As number_of_question',
         'exam.description As description',
         `coalesce(
           json_agg(

@@ -27,13 +27,14 @@ export class QuestionService extends BaseService<QuestionEntity, QuestionReqI, Q
     const questionsWithUser = questions.map((q) => ({
       ...q,
       created_by: userId,
+      question: q.question ? q.question : undefined,
     }))
 
     const result = await this.repository
       .createQueryBuilder("question")
       .insert()
       .values(questionsWithUser)
-      .returning(['id', 'index', 'type', 'correct_answer'])
+      .returning(['id', 'index', 'type', 'correct_answer', 'question'])
       .execute();
 
     if (!result.raw?.length)

@@ -1,10 +1,10 @@
 import { Box, Button, Paper, Typography } from "@mui/material";
-import DialogCreateExam from "../ExamsContent/dialog.tsx"
+// import DialogCreateExam from "../Common/dialogExam.tsx"
 import { useNavigate } from "react-router";
 import { useExamDetail } from "./examDetail.tsx";
 
 export default function ExamDetail() {
-  const { exam, openEdit, id, examId, setOpenEdit, handleUpdateExam, deleteExam } = useExamDetail()
+  const { exam, id, examId, setOpenEdit, deleteExam } = useExamDetail()
   const navigate = useNavigate();
 
   if (!exam) return <Typography>Đang tải...</Typography>;
@@ -72,15 +72,17 @@ export default function ExamDetail() {
         <Typography color="text.secondary">Chưa có học viên nào làm bài thi.</Typography>
       </Box>
 
-      <DialogCreateExam
-        open={openEdit}
-        onClose={() => setOpenEdit(false)}
-        onSubmit={handleUpdateExam}
-        initialData={exam}
-        mode="edit"
-      />
+      {/*<DialogCreateExam*/}
+      {/*  open={openEdit}*/}
+      {/*  onClose={() => setOpenEdit(false)}*/}
+      {/*  onSubmit={handleUpdateExam}*/}
+      {/*  initialData={exam}*/}
+      {/*  mode="edit"*/}
+      {/*/>*/}
 
     </Box>
 
   );
 }
+
+// is ExamGroup

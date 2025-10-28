@@ -62,3 +62,5 @@ export function useExamDetail() {
 
   return {exam, openEdit, id, examId, setOpenEdit, handleUpdateExam, deleteExam};
 }
+
+// is examGroup

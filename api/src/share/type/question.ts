@@ -18,6 +18,7 @@ export interface QuestionI extends QuestionBaseI {
 export interface QuestionReqI extends QuestionBaseI {
   id?: number
   exam_id?: number
+  question?: string
 }
 
 export interface QuestionResI extends Omit<QuestionI,'exam_id'> {}

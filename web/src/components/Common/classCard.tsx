@@ -16,7 +16,7 @@ export default function CourseCard({course}: { course: Course }) {
   };
 
 
-  const cardBackgroundColor = course.themeColor || '#29b6f6';
+  const cardBackgroundColor = '#29b6f6';
   return (
     <Card
       sx={{

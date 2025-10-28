@@ -1,3 +1,5 @@
+import type { Member } from "./common";
+
 export interface ExamFlowContextType {
   isLoading: boolean;
   examsWithStatus: ExamWithStatus[];
@@ -19,7 +21,7 @@ export interface ExamGroup {
   is_save_local: boolean
 }
 
-export interface Exam{
+export interface Exam {
   id?: number,
   name: string,
   code: string,
@@ -68,4 +70,35 @@ export interface AnswerResult{
   answer: string | null,
   is_correct: boolean[] | null,
   type: string
+}
+
+export interface ExamGroupDialogProps {
+  courseId: number,
+  isOpenDialog: boolean,
+  setIsOpenDialog: (isOpenDialog: boolean) => void,
+  isDeleting: boolean,
+  setIsDeleting: (isDeleting: boolean) => void,
+  examGroup?: ExamGroup,
+  onMounted: () => void,
+}
+
+export interface ExamGroupForm {
+  name: string,
+  awaitTime: string,
+  startTime: string
+}
+
+export interface StudentResultGroup extends Member {
+  result: ExamResult[]
+}
+
+export interface ResultGroupsListProps {
+  studentResultGroups: StudentResultGroup[],
+  numberOfExams: number,
+  handleMark: (studentId: number) => void,
+}
+
+export interface Action {
+  type: string,
+  payload?: any
 }

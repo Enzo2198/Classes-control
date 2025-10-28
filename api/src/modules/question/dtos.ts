@@ -20,7 +20,7 @@ export class CreateQuestion implements QuestionReqI {
   @ApiStrFieldNullable()
   correct_answer: string;
 
-  @ApiProperty({example: ''})
+  @ApiProperty({example: '', nullable: true, required: false })
   @IsString()
   @IsOptional()
   question?: string;

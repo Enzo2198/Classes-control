@@ -7,7 +7,7 @@ export interface Course {
 }
 
 export interface Member {
-  id: number | null;
+  id: number;
   name: string;
   role: string;
   email: string;

@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useState, type ReactNode, createContext} from "react";
+import {useCallback, useEffect, useMemo, useState, type ReactNode, createContext, useContext} from "react";
 import { useNavigate } from "react-router-dom";
 import {
   type Exam,
@@ -12,6 +12,14 @@ import { jwtDecode } from "jwt-decode";
 
 // Create the context
 export const ExamFlowContext = createContext<ExamFlowContextType | null>(null);
+
+export const useExamFlow = () => {
+  const context = useContext(ExamFlowContext);
+  if (!context) {
+    throw new Error('useExamFlow must be inside an ExamFlowProvider');
+  }
+  return context;
+}
 
 export function ExamFlowProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate();

@@ -15,7 +15,5 @@ export interface AuthState {
   clear: () => void;
 }
 
-// Auth service
-
 
 export interface TokenResponse extends LoginResponse {}

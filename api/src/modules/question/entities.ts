@@ -4,7 +4,7 @@ import {QuestionType} from "@/share/type/question";
 
 @Entity('question')
 export class QuestionEntity extends BaseEntity {
-  @Column()
+  @Column({nullable: true})
   question: string;
 
   @Column()
