@@ -3,7 +3,6 @@ import {Box, Button, Grid, Typography} from "@mui/material";
 
 export default function ExamsList(
   {exams, handleEditExam}: { exams: Exam[], handleEditExam: (examId: number) => void }) {
-  console.log(exams);
   return (
     <Grid container spacing={2} sx={{my: 3}}>
       {

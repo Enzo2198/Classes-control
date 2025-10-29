@@ -5,6 +5,7 @@ import { cloneElement } from "react";
 import {Link, Route, Routes } from "react-router";
 import {CopyrightInfo} from "./PageSection/copyrightInfo.tsx";
 import TeacherExamDetail from "../ExamGroup/Teacher/Page/examUploadPdf.tsx";
+import TeacherMarking from "../ExamGroup/Teacher/Page/marking.tsx";
 
 
 const ClassroomLayout = () => {
@@ -63,7 +64,7 @@ const ClassroomLayout = () => {
           <Route path="member" element={<MembersContent course={course}/>}/>
           <Route path="exam/:examGroupId" element={<ExamGroupDetail/>}/>
           <Route path="exam/:examGroupId/:examId" element={<TeacherExamDetail/>}/>
-          {/*<Route path="exam/:examGroupId/marking" element={<TeacherMarking/>}/>*/}
+          <Route path="exam/:examGroupId/marking" element={<TeacherMarking/>}/>
         </Routes>
       </Box>
     </Box>

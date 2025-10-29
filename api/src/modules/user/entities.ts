@@ -21,6 +21,9 @@ export class UserEntity extends BaseEntity {
   })
   role: Role;
 
+  @Column()
+  status: string;
+
   @Column({nullable: true})
   avatar: number | null;
 

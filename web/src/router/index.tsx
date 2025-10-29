@@ -1,15 +1,10 @@
 import {createBrowserRouter, Navigate} from "react-router";
-import Classes from "../pages/Classes"
-import ClassDetail from "../pages/ClassDetail";
-import Login from "../pages/Login"
-import Register from "../pages/Register"
-import {AddNewClass} from "../components"; // , CreateExam, ExamDetail, ExamsContent, MembersContent
-// import NotFound from "../pages/NotFound";
+import {AddNewClass} from "../components";
 import PublicLayout from "./PublicLayout";
 import ProtectedLayout from "./ProtectedLayout.tsx";
 import ExamFlowLayout from "./ExamFlowLayout.tsx";
-// import Profile from "../pages/Profile";
-// import Invite from "../pages/Invite/index.tsx";
+import StudentExamDetail from "../components/ExamGroup/Student/Page/examDetail.tsx";
+import {Register, ClassDetail, Classes, Login, Profile, Invite, NotFound} from "../pages";
 
 const router = createBrowserRouter([
   {
@@ -30,7 +25,7 @@ const router = createBrowserRouter([
         children: [
           {path: "/classes", element: <Classes/>},
           {path: "/class/add", element: <AddNewClass/>},
-          // {path: "/profile", element: <Profile/>},
+          {path: "/profile", element: <Profile/>},
 
           // Exam Flow routes
           {
@@ -40,17 +35,17 @@ const router = createBrowserRouter([
                 path: "/class/:id/*",
                 element: <ClassDetail/>
               },
-              // { path: "exam/:examGroupId/doing", element: <StudentExamDetail /> },
+              {path: "exam/:examGroupId/doing", element: <StudentExamDetail/>},
             ],
           },
         ],
       },
 
       // Public invite + Home
-      // {path: "/invite", element: <Invite/>},
-      // { path: "/", element: <Index /> },
-      {path: "/", element: <Navigate to="/classes" replace />},
-      // {path: "*", element: <NotFound/>},
+      {path: "/invite", element: <Invite/>},
+      {path: "/", element: <Classes/>},
+      {path: "/", element: <Navigate to="/classes" replace/>},
+      {path: "*", element: <NotFound/>},
     ],
   },
 ]);

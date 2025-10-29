@@ -1,9 +1,7 @@
-import {UserBaseI, UserI} from "@/share";
+import {UserBaseI, UserResI} from "@/share";
 
 export interface TeacherBaseI extends UserBaseI{}
 
-export interface TeacherI extends UserI {}
-
 export interface TeacherReqI extends TeacherBaseI {}
 
-export interface TeacherResI extends TeacherI {}
+export interface TeacherResI extends UserResI {}

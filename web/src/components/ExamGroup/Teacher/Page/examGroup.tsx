@@ -42,7 +42,8 @@ export default function TeacherExamGroup() {
         >
           Danh sách bài thi
         </Typography>
-        <Typography variant="h6" fontWeight="bold" mb={2}>&gt; Chi tiết bài thi</Typography>
+        <Typography variant="h6" fontWeight="bold" sx={{mr: 2}}>&gt;</Typography>
+        <Typography variant="h6" fontWeight="bold" mb={2}>Chi tiết bài thi</Typography>
       </Box>
 
       {/* Exam group info */}

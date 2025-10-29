@@ -8,7 +8,7 @@ import {RequiredMark} from "../../../Common";
 export default function TeacherAnswers(props: TeacherAnswersProps) {
 
   const {state, examIdNum} = props;
-  const {handlers, handleSubmit} = useTeacherAnswers(props);
+  const {handlers, handleSubmit, isLoading} = useTeacherAnswers(props);
 
   const checkDisplay = (questionIndex: number): boolean => {
     return questionIndex < Number(state.number_of_question);
@@ -29,6 +29,7 @@ export default function TeacherAnswers(props: TeacherAnswersProps) {
             variant="contained"
             size="large"
             type="submit"
+            disabled={isLoading}
             sx={{mt: 2}}
           >
             {examIdNum ? 'Chỉnh sửa đề bài' : 'Tạo đề bài'}
@@ -101,8 +102,6 @@ export default function TeacherAnswers(props: TeacherAnswersProps) {
             width={"100%"}
             itemData={{
               questions: state.questions,
-              // onTypeChange: handleTypeChange,
-              // onAnswerChange: handleAnswerChange
             }}
           >
             {({index, style, data}: ListChildComponentProps) => {

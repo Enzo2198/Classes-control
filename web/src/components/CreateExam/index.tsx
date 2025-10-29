@@ -1,6 +1,6 @@
 import {Box, Button, MenuItem, Paper, Select, TextField, Typography} from "@mui/material";
 import {Grid} from '@mui/material';
-import {useCreateExam} from "./createExam.tsx";
+import {useCreateExam} from "./createExam.ts";
 
 export default function CreateQuestionPage() {
   const {form, handleInputChange, handleAnswerChange} = useCreateExam()

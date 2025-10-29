@@ -7,7 +7,6 @@ import type {ExamGroup} from '../../utils';
 export default function RecentActivity({examGroups}: { examGroups: ExamGroup[] }) {
   const sortedExamGroups: ExamGroup[] = examGroups.sort((a: ExamGroup, b: ExamGroup) =>
     new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-
   return (
     <Box sx={{
     borderLeft: '1px solid #e0e0e0',
@@ -26,7 +25,7 @@ export default function RecentActivity({examGroups}: { examGroups: ExamGroup[] }
       <Box key={examGroup.id} sx={{px: 0, py: 1, display: 'flex', alignItems: 'center'}}>
   <Avatar
     src={`https://i.pravatar.cc/150?img=${examGroup.id}`}
-  sx={{width: 40, height: 40, mr: 2}}
+    sx={{width: 40, height: 40, mr: 2}}
   />
   <Box>
   <Typography variant="body2">

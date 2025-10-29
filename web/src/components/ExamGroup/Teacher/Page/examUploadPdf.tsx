@@ -37,9 +37,7 @@ export default function TeacherExamDetail() {
             Danh sách bài thi
           </Typography>
 
-          <Typography
-            variant="h6" fontWeight="bold"
-            sx={{mr: 2}}>{`>`}</Typography>
+          <Typography variant="h6" fontWeight="bold" sx={{mr: 2}}>&gt;</Typography>
 
           <Typography
             variant="h6" fontWeight="bold"
@@ -53,9 +51,7 @@ export default function TeacherExamDetail() {
             onClick={handleBackToExamGroupDetail}
           >{examGroup?.name ?? ''}</Typography>
 
-          <Typography
-            variant="h6" fontWeight="bold"
-            sx={{mr: 2}}>{`>`}</Typography>
+          <Typography variant="h6" fontWeight="bold" sx={{mr: 2}}>&gt;</Typography>
 
           <Typography variant="h6" fontWeight="bold">
             {examIdNum ? state.name : 'Thêm đề bài'}

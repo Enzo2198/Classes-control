@@ -1,6 +1,5 @@
 import type {ReactNode} from "react";
-import type {Course, Member, Test} from "./common.ts";
-import type {ExamGroup} from "./exams.ts";
+import type {Member, Test} from "./common.ts";
 
 export interface ClassroomLayoutProps {
   className: string;
@@ -30,9 +29,4 @@ export interface ClassroomContextType {
 export interface NewClassForm {
   name: string;
   code: string;
-}
-
-export interface OverviewContentProps {
-  course: Course
-  examGroups: ExamGroup[]
 }

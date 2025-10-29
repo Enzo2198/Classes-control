@@ -1,5 +1,6 @@
 import type {AxiosRequestConfig} from "axios";
 import apiClient from "../auth/interceptors";
+import {toast} from "react-toastify";
 
 export const getMethod = async (endpoint: string, config?: AxiosRequestConfig) => {
   try{
@@ -16,8 +17,8 @@ export const postMethod = async (endpoint: string, payload: any, config?: AxiosR
   try{
     const {data} = await apiClient.post(endpoint, payload, config ?? {});
     return data;
-  }catch(e){
-    console.log(e);
+  }catch(e: any){
+    toast.error(e.response.data.message);
   }
 
   return null;

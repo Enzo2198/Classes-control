@@ -3,9 +3,10 @@ import {TeacherController} from "@/modules/teacher/controllers";
 import {TeacherServiceToken} from "@/share";
 import {TeacherService} from "@/modules/teacher/services";
 import {UserModule} from "@/modules/user/module";
+import {FileModule} from "@/modules/file/module";
 
 @Module({
-  imports: [UserModule],
+  imports: [UserModule, FileModule],
   controllers: [TeacherController],
   providers: [
     {

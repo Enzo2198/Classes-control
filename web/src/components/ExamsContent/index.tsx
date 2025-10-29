@@ -115,7 +115,7 @@ function ExamGroupsGrid({examGroups, classId}: { examGroups: ExamGroup[], classI
       <Grid container spacing={2}>
         {examGroups.length === 0 && (<>0</>)}
         {examGroups.map((examGroup: ExamGroup) => (
-          <Grid size={{xs: 12, md: 6, lg: 4}} key={examGroup.id} sx={{border: '1px solid #0000ff'}}>
+          <Grid size={{xs: 12, md: 6, lg: 4}} key={examGroup.id} sx={{border: '1px solid #0000ff', borderRadius: 1}}>
 
             <Paper elevation={0}>
               <Link to={`/class/${classId}/exam/${examGroup.id}`}
@@ -137,12 +137,14 @@ function ExamGroupsGrid({examGroups, classId}: { examGroups: ExamGroup[], classI
                   />
 
                   <Box>
-                    <Typography variant='body1' fontWeight="medium" textAlign="left"
-                                sx={{mb: 1}}>
+                    <Typography
+                      variant='body1' fontWeight="medium" textAlign="left"
+                      sx={{mb: 1}}>
                       {examGroup.name}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary"
-                                fontWeight={'medium'}>
+                    <Typography
+                      variant="body2" color="text.secondary"
+                      fontWeight={'medium'}>
                       Ngày bắt đầu: {dayjs(examGroup.start_time).format('DD/MM/YYYY')}
                     </Typography>
                   </Box>

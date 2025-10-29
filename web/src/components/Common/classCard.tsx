@@ -3,9 +3,11 @@ import ShareIcon from '@mui/icons-material/Share';
 import type {Course} from '../../utils';
 import { Box, Button, Card, Typography } from "@mui/material";
 import {useNavigate} from "react-router";
+import useOverviewContent from "../OverviewContent/overviewContent.ts";
 
 export default function CourseCard({course}: { course: Course }) {
   const navigate = useNavigate();
+  const {onCopyLink} = useOverviewContent({course})
 
   const onEnterClass = (course: Course) => {
     navigate(`/class/${course.id}`, {
@@ -45,7 +47,8 @@ export default function CourseCard({course}: { course: Course }) {
               fontWeight: 'bold',
               flexGrow: 1,
               mr: 1,
-
+              mt: 1,
+              fontSize: '24px',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               display: '-webkit-box',
@@ -57,14 +60,15 @@ export default function CourseCard({course}: { course: Course }) {
           </Typography>
 
           <Button
-            size="small"
+            // size="large"
             startIcon={<MeetingRoomIcon/>}
             onClick={() => onEnterClass(course)}
             sx={{
+              fontSize: '16px',
               color: 'white',
               textTransform: 'none',
               whiteSpace: 'nowrap',
-              p: '2px 8px',
+              p: '10px 16px',
               minWidth: 'auto',
               '&:hover': {
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -117,6 +121,7 @@ export default function CourseCard({course}: { course: Course }) {
             variant="outlined"
             size="small"
             startIcon={<ShareIcon fontSize="inherit"/>}
+            onClick={onCopyLink}
             sx={{
               color: 'white',
               borderColor: 'rgba(255, 255, 255, 0.5)',

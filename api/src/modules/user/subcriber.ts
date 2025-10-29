@@ -13,5 +13,5 @@ export class UserSubscriber extends BaseCascadeSubscriber<UserEntity>{
     ]);
   }
 
-  listenTo(): Function | string { return UserEntity}
+  listenTo(): Function | string { return UserEntity }
 }

@@ -1,19 +1,22 @@
-import { Box, Button, Typography, Paper, Link, Stack, FormControl, FormLabel, TextField, IconButton, InputAdornment, MenuItem} from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  Paper,
+  Link,
+  Stack,
+  FormControl,
+  FormLabel,
+  TextField,
+  IconButton,
+  InputAdornment,
+  MenuItem,
+  Select
+} from "@mui/material";
 import {NavLink} from "react-router";
 import {LuEye, LuEyeOff} from "react-icons/lu";
 import {RequiredMark} from "../../components";
-import {useRegister} from "./register.tsx";
-
-const role = [
-  {
-    value: 'student',
-    label: 'Student',
-  },
-  {
-    value: 'teacher',
-    label: 'Teacher',
-  },
-];
+import {useRegister} from "./register.ts";
 
 export default function Register() {
   const {
@@ -25,6 +28,7 @@ export default function Register() {
     showConfirmPassword,
     setShowConfirmPassword,
     handleChange,
+    onChangeRole,
     handleBlur,
     handleSubmit
   } = useRegister()
@@ -166,21 +170,19 @@ export default function Register() {
           </FormControl>
 
           <FormControl>
-            <TextField
-              id="outlined-select-currency"
-              select
-              label="Bạn là"
-              defaultValue="student"
-              name="role"
-              onChange={handleChange}
-              helperText="Lựa chọn vai trò của bạn"
+            <FormLabel sx={{fontWeight: "bold", fontSize: "16px", color: "black", mb: 2}}>
+              Bạn là
+            </FormLabel>
+            <Select fullWidth
+                    // size={'small'}
+                    name={'role'}
+                    onChange={onChangeRole}
+                    value={formData.role}
+                    sx={{textAlign: 'center'}}
             >
-              {role.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
+              <MenuItem value={'student'}>Học sinh</MenuItem>
+              <MenuItem value={'teacher'}>Giáo viên</MenuItem>
+            </Select>
           </FormControl>
 
           <Stack direction="row" justifyContent="center" spacing={6} pt={4}>

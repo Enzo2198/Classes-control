@@ -4,6 +4,7 @@ import {validateConfirmPassword, validateEmail, validateName, validatePassword} 
 import { postMethod } from "../../utils";
 import { toast } from "react-toastify";
 import * as React from "react";
+import type {SelectChangeEvent} from "@mui/material";
 
 interface FormData {
   name: string;
@@ -26,7 +27,7 @@ export function useRegister() {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "",
+    role: "student",
   });
 
   const [errors, setErrors] = useState<FormErrors>({
@@ -65,7 +66,7 @@ export function useRegister() {
     setFormData((prev) => {
       const updatedForm = { ...prev, [name]: value };
 
-      // Validate sau khi cập nhật
+      // Validate after update
       setErrors((prevErrors) => ({
         ...prevErrors,
         [name as keyof FormErrors]: validateRegisterForm(updatedForm)[name as keyof FormErrors] ?? "",
@@ -74,6 +75,13 @@ export function useRegister() {
       return updatedForm;
     });
   };
+
+  const onChangeRole = (e: SelectChangeEvent) => {
+    setFormData({
+      ...formData,
+      role: e.target.value
+    })
+  }
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name } = e.target;
@@ -126,6 +134,7 @@ export function useRegister() {
     setShowConfirmPassword,
     handleChange,
     handleBlur,
-    handleSubmit
+    handleSubmit,
+    onChangeRole
   }
 }

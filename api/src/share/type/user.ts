@@ -9,11 +9,12 @@ export interface UserBaseI {
 export interface UserI extends UserBaseI {
   id: number;
   role: Role
+  avatar: number | null;
 }
 
 export interface UserReqI extends UserBaseI {}
 
-export interface UserResI extends UserI {
+export interface UserResI extends Omit<UserI, 'avatar'> {
   avatar_info: AvatarInfo | null;
 }
 

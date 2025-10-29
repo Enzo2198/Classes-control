@@ -12,19 +12,16 @@ import {
 } from "@mui/material";
 import {type ChangeEvent, memo} from "react";
 
-const QuestionUnit = (
-  {question, onTypeChange, onAnswerChange, isDisplay}: QuestionUnitProps)=>
-{
-
+const QuestionUnit = ({question, onTypeChange, onAnswerChange, isDisplay}: QuestionUnitProps) => {
   const handleTypeChange = (e: SelectChangeEvent) => {
     onTypeChange(question.index, e.target.value);
   }
 
   const handleAnswerChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onAnswerChange(question.index, question.type as 'single-choice' | 'multiple-choice', e.target.value, e.target.checked);
+    onAnswerChange(question.index, question.type as 'single-choice' | 'multiple-choice', e.target.value, e.target.checked)
   }
 
-  const options: string[] = ['A', 'B', 'C', 'D'];
+  const options: string[] = ["A", "B", "C", "D"];
 
   let questionElement;
   switch (question.type) {
@@ -32,30 +29,28 @@ const QuestionUnit = (
       questionElement = options.map((option: string, index: number) => {
         return (
           <Box key={index} sx={{display: 'flex', alignItems: 'center'}}>
-            <Radio
-              name={`question-${question.index}`}
-              onChange={handleAnswerChange}
-              checked={question.correct_answer === option}
-              id={`question-${question.index}-${option}`} value={option}/>
+            <Radio name={`question-${question.index}`}
+                   onChange={handleAnswerChange}
+                   checked={question.correct_answer === option}
+                   id={`question-${question.index}-${option}`} value={option}/>
             <label htmlFor={`question-${question.index}-${option}`}>{option}</label>
           </Box>
         )
-      })
+      });
       break;
 
     case 'multiple-choice':
       questionElement = options.map((option: string, index: number) => {
         return (
           <Box key={index} sx={{display: 'flex', alignItems: 'center'}}>
-            <Checkbox
-              name={`question-${question.index}`}
-              onChange={handleAnswerChange}
-              checked={question.correct_answer.includes(option)}
-              id={`question-${question.index}-${option}`} value={option}/>
+            <Checkbox name={`question-${question.index}`}
+                      onChange={handleAnswerChange}
+                      checked={question.correct_answer.includes(option)}
+                      id={`question-${question.index}-${option}`} value={option}/>
             <label htmlFor={`question-${question.index}-${option}`}>{option}</label>
           </Box>
         )
-      })
+      });
       break;
 
     case 'long-response':
@@ -74,11 +69,10 @@ const QuestionUnit = (
         </Grid>
 
         <Grid size={{xs: 4, lg: 4}}>
-          <Select
-            fullWidth size={'small'}
-            name={'questionType'}
-            onChange={handleTypeChange}
-            value={question.type}
+          <Select fullWidth size={'small'}
+                  name={'questionType'}
+                  onChange={handleTypeChange}
+                  value={question.type}
           >
             <MenuItem value={'single-choice'}>Chọn một đáp án</MenuItem>
             <MenuItem value={'multiple-choice'}>Chọn nhiều đáp án</MenuItem>

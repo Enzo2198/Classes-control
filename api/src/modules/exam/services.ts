@@ -58,7 +58,7 @@ export class ExamService extends BaseService<ExamEntity, ExamReqI, ExamResI>
     if(!questions?.length) throw new BadRequestException('Exam must include at least one question');
 
     const existing = await this.repository.findOne({where: {code: examData.code}});
-    if (existing) throw new ConflictException(`Exam code "${examData.code}" already exists`);
+    if (existing) throw new ConflictException(`Mã đề ${examData.code} đã có`);
 
     // Create exam
     const [exam] = await this.repository
