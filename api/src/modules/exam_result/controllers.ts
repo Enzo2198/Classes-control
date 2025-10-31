@@ -19,8 +19,6 @@ export class ExamResultController {
   }
 
   @Get()
-  @Roles(Role.ADMIN, Role.TEACHER)
-  @UseGuards(RolesGuard)
   @ApiQuery({name: 'student_id', required: true, type: Number, description: 'student ID'})
   @ApiQuery({name: 'exam_group_id', required: true, type: Number, description: 'exam group ID'})
   findAll(
@@ -31,8 +29,6 @@ export class ExamResultController {
   }
 
   @Post()
-  @Roles(Role.STUDENT)
-  @UseGuards(RolesGuard)
   create(@Body() data: CreateExamResult) {
     return this.examResultService.create(data);
   }

@@ -113,7 +113,7 @@ export default function OverviewContent({course, examGroups}: {course: Course, e
 
           {/* Recent Activity section */}
           <Grid size={{xs: 0, lg: 4}} sx={{flexGrow: 1, flexShrink: 0, width: '100%'}}>
-            <RecentActivity examGroups={examGroups} course={course}/>
+            <RecentActivity examGroups={examGroups}/>
           </Grid>
 
         </Grid>

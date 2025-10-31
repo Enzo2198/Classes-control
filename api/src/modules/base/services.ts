@@ -46,7 +46,7 @@ export abstract class BaseService<Entity extends BaseEntity, RequestI, ResponseI
   }
 
   protected getTableName() {
-    return this.repository.metadata.name
+    return this.repository.metadata.tableName
   }
 
   protected handleSelect(): SelectQueryBuilder<Entity> {

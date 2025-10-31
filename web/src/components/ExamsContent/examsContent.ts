@@ -1,11 +1,13 @@
 import {useEffect, useMemo, useState} from "react";
-import {type Course, type ExamGroup, getMethod, getUserInfo, getValidAccessToken} from "../../utils";
+import {type ExamGroup, getMethod, getUserInfo, getValidAccessToken} from "../../utils";
 import {useNavigate} from "react-router";
+import {useParams} from "react-router-dom";
 
-export function useExamsContent({course}: { course: Course }) {
+export function useExamsContent() {
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState('student');
-  const {id: courseId} = course;
+  const {id} = useParams();
+  const courseId = Number(id)
 
   const [searchQuery, setSearchQuery] = useState('');
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -15,9 +17,8 @@ export function useExamsContent({course}: { course: Course }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const handleCreateExamGroup = () => {
-    setIsOpenDialog(true);
-  }
+  const handleCreateExamGroup = () => setIsOpenDialog(true);
+
   const [examGroups, setExamGroups] = useState<ExamGroup[]>([]);
 
   const filteredExamGroups: ExamGroup[] = useMemo(() =>
@@ -40,6 +41,8 @@ export function useExamsContent({course}: { course: Course }) {
   )
 
   const onMounted = async () => {
+    if (!courseId || courseId === 0) return
+
     const accessToken: string | null = await getValidAccessToken()
     if (!accessToken) {
       console.error('No valid access token, redirecting to login page');
@@ -49,7 +52,7 @@ export function useExamsContent({course}: { course: Course }) {
     const {role} = getUserInfo(accessToken)
     setUserRole(role)
 
-    const examGroupsData: ExamGroup[] = await getMethod(`/exam_groups?class_id=${course.id}`, {
+    const examGroupsData: ExamGroup[] = await getMethod(`/exam_groups?class_id=${courseId}`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     setExamGroups(examGroupsData);
@@ -58,7 +61,7 @@ export function useExamsContent({course}: { course: Course }) {
 
   useEffect(() => {
     onMounted();
-  }, [])
+  }, [courseId])
 
   return {
     courseId, userRole, handleSearchChange, openExamGroups, onMounted, notOpenExamGroups, searchQuery,

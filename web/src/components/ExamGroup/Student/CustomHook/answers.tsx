@@ -1,6 +1,20 @@
-import {memo, useCallback, type ChangeEvent} from "react";
-import type {Answer, StudentAnswersProps} from "../../../../utils";
-import {Box, Checkbox, Grid, Radio, TextField, Typography} from "@mui/material";
+import type {Dispatch, ChangeEvent} from 'react'
+import {useCallback, memo} from "react";
+
+import {
+  Grid,
+  Box,
+  TextField,
+  Radio,
+  Checkbox,
+  Typography
+} from '@mui/material';
+import type {Action, Answer, ExamDoing } from '../../../../utils';
+
+interface StudentAnswersProps {
+  state: ExamDoing,
+  dispatch: Dispatch<Action>
+}
 
 export default function StudentAnswers({state, dispatch}: StudentAnswersProps) {
   const handleAnswerChange = useCallback((question: Answer) => {
@@ -25,8 +39,7 @@ export default function StudentAnswers({state, dispatch}: StudentAnswersProps) {
           dispatch({type: 'LONG_RESPONSE_ANSWER', payload: payload});
           break;
       }
-    }
-  }, [dispatch]);
+    }},[dispatch]);
 
   return (
     <>
@@ -39,9 +52,8 @@ export default function StudentAnswers({state, dispatch}: StudentAnswersProps) {
             state.questions.map((question: Answer) =>
               (
                 <Grid size={{xs: 6}} key={question.questionId}>
-                  <MemoizedQuestionUnit
-                    question={question}
-                    onAnswerChange={handleAnswerChange(question)}
+                  <MemoizedQuestionUnit question={question}
+                                        onAnswerChange={handleAnswerChange(question)}
                   />
 
                 </Grid>
@@ -67,12 +79,11 @@ const MemoizedQuestionUnit = memo(function QuestionUnit({question, onAnswerChang
     case 'single-choice':
       questionElement = options.map((option: string, index: number) => {
         return (
-          <Box key={index} sx={{display: 'flex', alignItems: 'center'}}>
-            <Radio
-              name={`question-${question.questionIndex}`}
-              onChange={onAnswerChange}
-              checked={question.answer === option}
-              id={`question-${question.questionIndex}-${option}`} value={option}/>
+          <Box key={index} sx={{display:'flex', alignItems: 'center'}}>
+            <Radio name={`question-${question.questionIndex}`}
+                   onChange={onAnswerChange}
+                   checked={question.answer === option}
+                   id={`question-${question.questionIndex}-${option}`} value={option}/>
             <label htmlFor={`question-${question.questionIndex}-${option}`}>{option}</label>
           </Box>
         )
@@ -82,12 +93,11 @@ const MemoizedQuestionUnit = memo(function QuestionUnit({question, onAnswerChang
     case 'multiple-choice':
       questionElement = options.map((option: string, index: number) => {
         return (
-          <Box key={index} sx={{display: 'flex', alignItems: 'center'}}>
-            <Checkbox
-              name={`question-${question.questionIndex}`}
-              onChange={onAnswerChange}
-              checked={question.answer.includes(option)}
-              id={`question-${question.questionIndex}-${option}`} value={option}/>
+          <Box key={index} sx={{display:'flex', alignItems: 'center'}}>
+            <Checkbox name={`question-${question.questionIndex}`}
+                      onChange={onAnswerChange}
+                      checked={question.answer.includes(option)}
+                      id={`question-${question.questionIndex}-${option}`} value={option}/>
             <label htmlFor={`question-${question.questionIndex}-${option}`}>{option}</label>
           </Box>
         )
@@ -95,23 +105,21 @@ const MemoizedQuestionUnit = memo(function QuestionUnit({question, onAnswerChang
       break;
 
     case 'long-response':
-      questionElement =
-        <TextField
-          fullWidth
-          size={'small'}
-          variant="outlined"
-          value={question.answer}
-          onChange={onAnswerChange}
-          slotProps={{
-            input: {
-              style: {whiteSpace: 'nowrap', overflowX: 'auto'}
-            }
-          }}
-        />
+      questionElement = <TextField
+        fullWidth
+        size={'small'}
+        variant="outlined"
+        value={question.answer}
+        onChange={onAnswerChange}
+        slotProps={{
+          input: {
+            style: {whiteSpace: 'nowrap', overflowX: 'auto'}
+          }
+        }}
+      />
       break;
 
-    default:
-      questionElement = <></>;
+    default: questionElement = <></>;
   }
 
   return (

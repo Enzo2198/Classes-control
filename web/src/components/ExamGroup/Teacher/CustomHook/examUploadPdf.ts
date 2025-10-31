@@ -66,7 +66,19 @@ export default function useUploadFile() {
             }
           });
 
-          dispatch({type: 'LOAD_INITIAL_DATA', payload: examData})
+          if (!examData) {
+            toast.error("Bài thi không tồn tại");
+            navigate(`/class/${id}/exam/${examGroupId}`);
+            return;
+          }
+
+          // fallback total_time nếu null
+          const payload = {
+            ...examData,
+            total_time: examData.total_time ?? 3600,
+          };
+
+          dispatch({ type: "LOAD_INITIAL_DATA", payload });
         }
 
         const examGroupData = await getMethod(`/exam_groups/${examGroupId}`, {

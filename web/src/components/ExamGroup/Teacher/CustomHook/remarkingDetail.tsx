@@ -4,7 +4,7 @@ import {
   putMethod,
   type AnswerResult,
   type QuestionI,
-  type RemarkingDetailProps
+  type RemarkingDetailProps, type Exam
 } from "../../../../utils";
 import {toast} from "react-toastify";
 import {Box, Button, Radio, Typography} from "@mui/material";
@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import {ProgressCircle} from "../../../Common";
 
 export default function RemarkingDetail({examResult, exam, onSaveSuccess}: RemarkingDetailProps) {
+  console.log(exam)
   // long-response answers need to be marked manually
   const remarkCount: number = examResult.answers.filter(answer =>
     answer.type === "long-response" && answer.is_correct === null).length;
@@ -117,6 +118,7 @@ export default function RemarkingDetail({examResult, exam, onSaveSuccess}: Remar
   }
 
 
+
   return (
     <Box>
       <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2}}>
@@ -168,7 +170,9 @@ export default function RemarkingDetail({examResult, exam, onSaveSuccess}: Remar
         questions.map(question => <MemoizedQuestionUnit
           key={question.id}
           question={question}
-          onMark={handleMarkChange}/>)
+          onMark={handleMarkChange}
+          exam={exam}
+        />)
       }
     </Box>
   )
@@ -177,9 +181,10 @@ export default function RemarkingDetail({examResult, exam, onSaveSuccess}: Remar
 interface QuestionUnitProps {
   question: QuestionI;
   onMark: (questionId: number, isCorrect: boolean) => void;
+  exam: Exam;
 }
 
-const MemoizedQuestionUnit = memo(function QuestionUnit({question, onMark}: QuestionUnitProps) {
+const MemoizedQuestionUnit = memo(function QuestionUnit({question, onMark, exam}: QuestionUnitProps) {
   const colorByCorrectness = (isCorrect: boolean | null) => {
     if (!question.isInitiallyMarked) return '#9d00ff';
     return isCorrect ? '#008000' : '#ff0000';
@@ -223,8 +228,10 @@ const MemoizedQuestionUnit = memo(function QuestionUnit({question, onMark}: Ques
         Câu {question.index + 1}:</Typography>
       <Typography variant={'body1'} color={colorByCorrectness(question.isCorrect)} sx={{mr: '10px'}}>
         {question.answer || 'Chưa trả lời'}</Typography>
-
       <MarkingElement/>
+      <Typography variant="body2" sx={{color: 'text.secondary', ml: 1}}>
+        (Đáp án đúng: {exam.questions.find(q => q.id === question.id)?.correct_answer || 'Giáo viên tự chấm'})
+      </Typography>
     </Box>
   )
 });

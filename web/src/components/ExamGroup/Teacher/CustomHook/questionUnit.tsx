@@ -43,10 +43,11 @@ const QuestionUnit = ({question, onTypeChange, onAnswerChange, isDisplay}: Quest
       questionElement = options.map((option: string, index: number) => {
         return (
           <Box key={index} sx={{display: 'flex', alignItems: 'center'}}>
-            <Checkbox name={`question-${question.index}`}
-                      onChange={handleAnswerChange}
-                      checked={question.correct_answer.includes(option)}
-                      id={`question-${question.index}-${option}`} value={option}/>
+            <Checkbox
+              name={`question-${question.index}`}
+              onChange={handleAnswerChange}
+              checked={question.correct_answer.includes(option)}
+              id={`question-${question.index}-${option}`} value={option}/>
             <label htmlFor={`question-${question.index}-${option}`}>{option}</label>
           </Box>
         )
@@ -69,10 +70,11 @@ const QuestionUnit = ({question, onTypeChange, onAnswerChange, isDisplay}: Quest
         </Grid>
 
         <Grid size={{xs: 4, lg: 4}}>
-          <Select fullWidth size={'small'}
-                  name={'questionType'}
-                  onChange={handleTypeChange}
-                  value={question.type}
+          <Select
+            fullWidth size={'small'}
+            name={'questionType'}
+            onChange={handleTypeChange}
+            value={question.type}
           >
             <MenuItem value={'single-choice'}>Chọn một đáp án</MenuItem>
             <MenuItem value={'multiple-choice'}>Chọn nhiều đáp án</MenuItem>

@@ -8,7 +8,7 @@ export default function useTeacherMarking() {
   const navigate = useNavigate();
   const {id, examGroupId} = useParams();
   const [searchParams] = useSearchParams();
-  const studentId: string | null = searchParams.get('student');
+  const studentId: string | null = searchParams.get('studentId');
   const [isLoading, setIsLoading] = useState(true);
 
   const handleBackToExamGroup = () => {
@@ -20,7 +20,7 @@ export default function useTeacherMarking() {
   const [examResults, setExamResults] = useState<ExamResult[]>([]);
 
   const matchExam = (examResult: ExamResult) => {
-    return exams.find(exam => exam.id === examResult.exam_id);
+    return exams.find(exam => Number(exam.id) === examResult.exam_id);
   }
 
   const fetchResultData = async () => {
@@ -33,7 +33,9 @@ export default function useTeacherMarking() {
 
     try {
       // Only exam results data need to fetch (reload)
-      const examResultsData = await getMethod(`/exam_results?student_id=${studentId}&exam_group_id=${examGroupId}`, {headers: {Authorization: `Bearer ${accessToken}`}});
+      const examResultsData = await getMethod(`/exam_results?student_id=${studentId}&exam_group_id=${examGroupId}`,
+        {headers: {Authorization: `Bearer ${accessToken}`}}
+      );
       if (examResultsData) {
         setExamResults(examResultsData.sort((a: ExamResult, b: ExamResult) => a.exam_id - b.exam_id));
       }
@@ -54,7 +56,9 @@ export default function useTeacherMarking() {
 
       try {
         const [examResultsData, examsData, examGroupData] = await Promise.all([
-          getMethod(`/exam_results?student_id=${studentId}&exam_group_id=${examGroupId}`, {headers: {Authorization: `Bearer ${accessToken}`}}),
+          getMethod(`/exam_results?student_id=${Number(studentId)}&exam_group_id=${examGroupId}`,
+            {headers: {Authorization: `Bearer ${accessToken}`}}
+          ),
           getMethod(`/exams?exam_group_id=${examGroupId}`, {headers: {Authorization: `Bearer ${accessToken}`}}),
           getMethod(`/exam_groups/${examGroupId}`, {headers: {Authorization: `Bearer ${accessToken}`}})
         ]);
@@ -64,6 +68,7 @@ export default function useTeacherMarking() {
         if (examsData) setExams(examsData.sort((a: Exam, b: Exam) => a.id! - b.id!));
 
         if (examGroupData) setExamGroup(examGroupData);
+
       } catch (e) {
         console.error('Error on loading data: ', e);
         toast.error('Có lỗi khi tải dữ liệu!')
@@ -75,5 +80,5 @@ export default function useTeacherMarking() {
     onInitialMount();
   }, []);
 
-  return {handleBackToExamGroup, examGroup, examResults, matchExam, fetchResultData, isLoading}
+  return {handleBackToExamGroup, examGroup, examResults, matchExam, fetchResultData, isLoading, exams}
 }

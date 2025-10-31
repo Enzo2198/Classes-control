@@ -55,6 +55,7 @@ export default function useTeacherAnswers(
 
     if(!validationResult.isValid){
       toast.error(validationResult.message);
+      setIsLoading(false);
       return;
     }
 
@@ -64,6 +65,8 @@ export default function useTeacherAnswers(
       if(response) {
         toast.success(examIdNum ? 'Chỉnh sửa đề thi thành công!' : 'Tạo đề thi thành công!');
         handleBackToExamGroupDetail();
+      } else {
+        toast.error(`Mã đề ${state.code} đã có`)
       }
 
     } catch (e: any) {
@@ -74,5 +77,5 @@ export default function useTeacherAnswers(
     }
   }
 
-  return { handlers, handleSubmit, isLoading };
+  return { handlers, handleSubmit, isLoading, setIsLoading };
 }

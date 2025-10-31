@@ -81,7 +81,6 @@ export default () => {
     handleLogout,
     handleClick,
     getRoleLabel,
-    className,
     displayAddClassButton,
     mobileOpen,
     handleDrawerToggle,
@@ -144,12 +143,6 @@ export default () => {
           </Box>
           <Box style={{fontSize: 12}}>Classroom</Box>
         </Box>
-      </Box>
-
-      <Box sx={{position: 'relative', left: '130px', display: {xs: 'none', md: 'block'}}}>
-        <Typography sx={{fontWeight: 600, fontSize: '1.2rem'}}>
-          {className}
-        </Typography>
       </Box>
 
       <Stack direction="row" spacing={2}>

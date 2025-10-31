@@ -1,6 +1,5 @@
 import type {Action, Answer, ExamDoing } from "../../../../utils";
 
-
 const defaultAnswer = {
   questionId: 0,
   questionIndex: 0,

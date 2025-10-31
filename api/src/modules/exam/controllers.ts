@@ -81,7 +81,11 @@ export class ExamController {
     file: Express.Multer.File
   ) {
     const examFile = await this.fileService.uploadAndCreateFile(file);
-    const createData = {...data, file_id: examFile.id};
+    const createData = {...data};
+    if(examFile.id){
+      createData['file_id'] = examFile.id ;
+    }
+
     return this.examService.create(createData);
   }
 
@@ -112,7 +116,7 @@ export class ExamController {
       fileId = examFile.id;
     }
 
-    const updateData = {...data};
+    const { questions, ...updateData } = data;
     if(fileId){
       updateData['file_id'] = fileId;
     }

@@ -26,28 +26,38 @@ export class ExamService extends BaseService<ExamEntity, ExamReqI, ExamResI>
       .createQueryBuilder('exam')
       .select([
         'exam.id AS id',
-        'exam.name As name',
-        'exam.code As code',
-        'exam.exam_group_id::int As exam_group_id',
-        'exam.total_time As total_time',
-        'exam.number_of_question As number_of_question',
-        'exam.description As description',
+        'exam.exam_group_id::int AS exam_group_id',
+        'exam.name AS name',
+        'exam.code AS code',
+        'exam.total_time AS total_time',
+        'exam.number_of_question AS number_of_question',
+        'exam.description AS description',
+
+        // Merge group list from table question_exam
         `coalesce(
-          json_agg(
-            json_build_object(
-              'id', q.id,
-              'question', q.question,
-              'type', q.type,
-              'correct_answer', q.correct_answer
-            )
-          ) filter (where q.active = true and q.deleted_at is null),
-        '[]') As questions`,
+        json_agg(
+          json_build_object(
+            'id', q.id,
+            'index', q.index,
+            'type', q.type,
+            'correct_answer', q.correct_answer
+          )
+        ) filter (where q.active = true and q.deleted_at is null),
+      '[]') AS questions`,
+
+        // File PDF
+        `json_build_object(
+        'id', f.id,
+        'url', f.viewable_url,
+        'file_type', f.file_type
+      ) AS file`
       ])
       .leftJoin('question_exam', 'qe', 'qe.exam_id = exam.id')
       .leftJoin('question', 'q', 'q.id = qe.question_id')
+      .leftJoin('file', 'f', 'f.id = exam.file_id')
       .where('exam.active = true')
-      .andWhere('exam.deleted_at is null')
-      .groupBy('exam.id')
+      .andWhere('exam.deleted_at IS NULL')
+      .groupBy('exam.id, f.id');
   }
 
   @Transactional()

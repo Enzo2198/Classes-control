@@ -14,7 +14,7 @@ export const initState: Exam = {
   total_time: 0,
   questions: [defaultQuestion],
   description: "default",
-  file: null
+  file: null,
 }
 
 const actionHandlers = {

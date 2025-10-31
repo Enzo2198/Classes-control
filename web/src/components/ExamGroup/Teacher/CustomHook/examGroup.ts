@@ -39,7 +39,7 @@ export default function useTeacherExamGroup() {
   }
 
   const handleMark = (studentId: number) => {
-    navigate(`/class/${studentId}/exam/${examGroupId}/marking?studentId=${studentId}`)
+    navigate(`/class/${id}/exam/${examGroupId}/marking?studentId=${studentId}`)
   }
 
   const [examGroupDetail, setExamGroupDetail] = useState<ExamGroup | undefined>(undefined)
@@ -109,7 +109,6 @@ export default function useTeacherExamGroup() {
             })
           )
         )
-        console.log('resultData', resultData)
 
         // Add exam results to each student data
         const studentResults = students.map((student: Member, index: number) => {
@@ -118,7 +117,6 @@ export default function useTeacherExamGroup() {
             result: resultData[index],
           }
         })
-        console.log('studentResults', studentResults)
 
         // Only show students who have taken at least one of the exams
         const notEmptyStudentResults: StudentResultGroup[] = studentResults.filter(

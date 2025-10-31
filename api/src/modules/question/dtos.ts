@@ -27,7 +27,7 @@ export class CreateQuestion implements QuestionReqI {
 }
 
 export class UpdateQuestion extends CreateQuestion {
-  @ApiProperty({example: 1})
+  @ApiProperty({example: 1, nullable: true, required: false})
   @IsNumber()
   @IsOptional()
   id?: number;

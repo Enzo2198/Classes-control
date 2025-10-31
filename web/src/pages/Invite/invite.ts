@@ -33,7 +33,7 @@ export function useInvite() {
     });
 
     if (!response) {
-      toast.error("Có lỗi, vui lòng thử lại !");
+      toast.error("Mật khẩu tham gia lớp không đúng!");
     } else {
       toast.success("Tham gia thành công!");
       navigate(`/class/${classId}`);

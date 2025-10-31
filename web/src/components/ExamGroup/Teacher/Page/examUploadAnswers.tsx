@@ -1,6 +1,6 @@
 import {Box, Button, Grid, TextField} from "@mui/material";
 import type {TeacherAnswersProps} from "../../../../utils";
-import useTeacherAnswers from "../CustomHook/answers.ts";
+import useTeacherAnswers from "../CustomHook/examUploadAnswers.ts";
 import {FixedSizeList as List, type ListChildComponentProps} from "react-window";
 import {MemoizedQuestionUnit} from "../CustomHook/questionUnit.tsx";
 import {RequiredMark} from "../../../Common";

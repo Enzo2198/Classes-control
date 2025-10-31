@@ -40,7 +40,7 @@ export default function ResultGroupsList(
                   <Typography variant={'body1'} sx={{fontWeight: 600}}>
                     {studentResult.name}
                   </Typography>
-                  <Typography variant={'body2'}>
+                  <Typography variant={'body2'} sx={{ overflowWrap: 'anywhere' }}>
                     {studentResult.email}
                   </Typography>
                 </Box>

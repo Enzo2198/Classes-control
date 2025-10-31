@@ -105,9 +105,10 @@ export default function TeacherExamGroup() {
               Chưa có học viên nào làm bài thi.
             </Typography>
           )
-          : <ResultGroupsList studentResultGroups={studentResultGroups}
-                              numberOfExams={exams.length}
-                              handleMark={handleMark}
+          : <ResultGroupsList
+            studentResultGroups={studentResultGroups}
+            numberOfExams={exams.length}
+            handleMark={handleMark}
           />
       }
 

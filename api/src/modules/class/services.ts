@@ -30,33 +30,31 @@ export class ClassService extends BaseService<ClassEntity, ClassReqI, ClassResI>
         'class.name as name',
         'class.code as code',
         `coalesce(
-                    json_agg(
-                        json_build_object(
-                            'id', "user".id,
-                            'name', "user".name,
-                            'role', "user".role,
-                            'email', "user".email
-                        )
-                    ) filter (where "user".role = 'teacher'),
-                 '[]') as teachers, 
-                    
-                 coalesce(
-                    json_agg(
-                        json_build_object(
-                            'id', "user".id,
-                            'name', "user".name,
-                            'role', "user".role,
-                            'email', "user".email
-                        )
-                    ) filter (where "user".role = 'student'),
-                 '[]') as students
-                `
+            json_agg(
+                json_build_object(
+                    'id', "user".id,
+                    'name', "user".name,
+                    'role', "user".role,
+                    'email', "user".email
+                )
+            ) filter (where "user".role = 'teacher'),
+         '[]') as teachers, 
+            
+         coalesce(
+            json_agg(
+                json_build_object(
+                    'id', "user".id,
+                    'name', "user".name,
+                    'role', "user".role,
+                    'email', "user".email
+                )
+            ) filter (where "user".role = 'student'),
+         '[]') as students
+        `
       ])
       .innerJoin(UserClassEntity, 'user_class', 'user_class.class_id = class.id and user_class.active')
       .innerJoin(UserEntity, 'user', '"user".id = user_class.user_id and "user".active')
       .groupBy('class.id, class.name, class.code');
-
-    console.log(this.getTableName());
   }
 
   async find(condition = {}) {

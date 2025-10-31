@@ -1,7 +1,7 @@
 import {QuestionType} from "@/share/type/question";
 
 interface AnswerBaseI {
-  question_exam_id: number;
+  question_id: number;
   answer: string;
 }
 

@@ -59,6 +59,7 @@ export class ExamResultService extends BaseService<ExamResultEntity, ExamResultR
                   'is_correct', a.is_correct
                 )                      
             ), '[]')
+            
           `)
           .from('answer', 'a')
           .leftJoin('question_exam', 'qe', 'qe.id = a.question_exam_id')

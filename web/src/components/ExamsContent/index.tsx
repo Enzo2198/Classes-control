@@ -1,7 +1,7 @@
 import {Box, Button, Grid, InputAdornment, Paper, TextField, Typography} from "@mui/material";
 import {Add as AddIcon, Search as SearchIcon, Description as DescriptionIcon} from '@mui/icons-material';
 import DialogCreateExam from "../Common/dialogExam.tsx";
-import {useExamsContent} from "./examsContent.tsx";
+import {useExamsContent} from "./examsContent.ts";
 import type {Course, ExamGroup} from "../../utils";
 import dayjs from "dayjs";
 import {Link} from "react-router";
@@ -11,7 +11,7 @@ export default function TestsContent({course}: { course: Course }) {
   const {
     courseId, userRole, handleSearchChange, openExamGroups, onMounted, notOpenExamGroups, searchQuery,
     isDeleting, setIsDeleting, isOpenDialog, setIsOpenDialog, isLoading, handleCreateExamGroup
-  } = useExamsContent({course})
+  } = useExamsContent()
 
   if (isLoading) return <Loading/>
 

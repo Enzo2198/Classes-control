@@ -8,7 +8,6 @@ import RemarkingDetail from "../CustomHook/remarkingDetail.tsx";
 
 export default function TeacherMarking() {
   const {handleBackToExamGroup, examGroup, examResults, matchExam, fetchResultData, isLoading} = useTeacherMarking()
-
   if (isLoading) return <Loading />
 
   return (
@@ -99,6 +98,7 @@ function BasicTabs({examResults, matchExam, onSaveSuccess}: BasicTabsProps) {
       {
         examResults.map((examResult: ExamResult, index: number) => {
           const matchedExam: Exam = matchExam(examResult)!;
+          if (!matchedExam) return <Loading/>;
           return (
             <CustomTabPanel key={examResult.id} index={index} value={value}>
               <RemarkingDetail examResult={examResult} exam={matchedExam} onSaveSuccess={onSaveSuccess} />

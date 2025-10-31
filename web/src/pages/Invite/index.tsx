@@ -49,16 +49,12 @@ export default function Invite() {
     <Container maxWidth={false} sx={styles.container}>
       <Paper sx={styles.paper}>
         <Box sx={styles.content}>
-          <Logo />
+          <Logo width={60} height={60} />
           <Typography variant="h4" sx={styles.title}>
             Tham gia lớp học
           </Typography>
 
           <Box component="form" sx={{ width: "100%" }} onSubmit={onSubmit}>
-            {/*<Typography variant="h6">Lớp học: {isInClass.name}</Typography>*/}
-            {/*<Typography variant="h6">*/}
-            {/*  {classData.teachers.length + classData.students.length} Thành viên*/}
-            {/*</Typography>*/}
 
             <TextField
               fullWidth

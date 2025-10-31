@@ -6,7 +6,7 @@ import {IsArray, IsBoolean, IsNumber, IsOptional} from "class-validator";
 export class CreateAnswer implements AnswerReqI {
   @ApiProperty({ example: 1 })
   @ApiIntField()
-  question_exam_id: number;
+  question_id: number;
 
   @ApiProperty({
     example: 'A,B',

@@ -7,14 +7,16 @@ type LogoProps = {
   mb?: number;          // margin-bottom
 };
 
-function Logo({ width = 80, height = 60, fontSize = '64px', mb = 2 }: LogoProps) {
+function Logo({ width = 40, height = 40, fontSize = '64px', mb = 2 }: LogoProps) {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', mb }}>
-      <Card sx={{ width, boxShadow: 'none' }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', mb}}>
+      <Card sx={{ width, boxShadow: 'none', mr: 1 }}>
         <CardMedia
-          image={'/logo2.png'}
+          component="img"
+          image={"https://bk-exam-public.s3.ap-southeast-1.amazonaws.com/logo2.png"}
+          alt="logo"
           title={'web logo'}
-          sx={{ height }}
+          sx={{ height, objectFit: 'contain'}}
         />
       </Card>
 
