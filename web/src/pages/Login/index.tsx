@@ -1,7 +1,9 @@
-import {Box, Button, Checkbox, Stack, Typography, Paper, Link, TextField} from "@mui/material";
+import {Box, Button, Checkbox, Stack, Typography, Paper, Link, TextField, InputAdornment, IconButton} from "@mui/material";
 import {NavLink} from "react-router";
 // import { FloatingInput } from "../../components";
 import {useLogin} from "./login.ts";
+import {LogoElement} from "../../components";
+import {Visibility, VisibilityOff } from "@mui/icons-material";
 
 export default function Login() {
   const {
@@ -13,7 +15,11 @@ export default function Login() {
     setRememberMe,
     rememberMe,
     touched,
-    isLoading
+    isLoading,
+    showPassword,
+    handleClickShowPassword,
+    handleMouseDownPassword,
+    handleMouseUpPassword
   } = useLogin();
 
   return (
@@ -24,7 +30,11 @@ export default function Login() {
         height: "100vh",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        backgroundImage: `url('/Background-Image.jpg')`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        backgroundPosition: "center"
       }}
     >
       <Paper
@@ -45,34 +55,51 @@ export default function Login() {
             color: "white",
             display: "flex",
             flexDirection: 'column',
-            justifyContent: "flex-end",
-            px: 8,
-            py: 6,
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderTopLeftRadius: "12px",
+            borderBottomLeftRadius: "12px",
+            px: 4,
+            py: 4,
             width: "50%",
           }}
         >
-          <Typography
-            variant="h5"
-            fontWeight="bold"
+          <Box
+            component="img"
+            src="/Login-Image.jpg"
+            alt="login-image"
             sx={{
-              mb: 1,
-              fontSize: "1.5rem",
-              lineHeight: 1.2,
+              width: "100%",
+              height: "auto",
+              mt: 12,
             }}
+          />
+          <Box
+            sx={{}}
           >
-            GIEO MẦM SÁNG TẠO...
-          </Typography>
-          <Typography
-            variant="h5"
-            fontWeight="bold"
-            sx={{
-              textAlign: "right",
-              fontSize: "1.5rem",
-              lineHeight: 1.2,
-            }}
-          >
-            ... DẪN HƯỚNG ĐAM MÊ
-          </Typography>
+            <Typography
+              variant="h5"
+              fontWeight="bold"
+              sx={{
+                mb: 1,
+                fontSize: "1.5rem",
+                lineHeight: 1.2,
+              }}
+            >
+              GIEO MẦM SÁNG TẠO...
+            </Typography>
+            <Typography
+              variant="h5"
+              fontWeight="bold"
+              sx={{
+                textAlign: "right",
+                fontSize: "1.5rem",
+                lineHeight: 1.2,
+              }}
+            >
+              ... DẪN HƯỚNG ĐAM MÊ
+            </Typography>
+          </Box>
         </Box>
 
         {/* Right side - Form section */}
@@ -91,7 +118,13 @@ export default function Login() {
         >
           <Stack spacing={2} mb={3}>
             {/* Logo */}
-            <Box textAlign="center" sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            <Box
+              textAlign="center"
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
               <Typography
                 variant="h3" fontWeight="bold"
                 sx={{
@@ -101,31 +134,7 @@ export default function Login() {
                   alignItems: 'center',
                 }}
               >
-                <Box component="span" sx={{mr: 1}}>
-                  <img src="https://bk-exam-public.s3.ap-southeast-1.amazonaws.com/logo2.png" alt="logo" width="40"
-                       height="40" style={{display: 'block'}}/>
-                </Box>
-                <Typography
-                  component="span" color="primary.main"
-                  sx={{
-                    pr: "5px",
-                    fontSize: "50px",
-                    fontWeight: 600,
-                    lineHeight: 1,
-                  }}
-                >
-                  BK
-                </Typography>
-                <Typography
-                  component="span" color="#ff9800"
-                  sx={{
-                    fontSize: "50px",
-                    fontWeight: 600,
-                    lineHeight: 1,
-                  }}
-                >
-                  Star
-                </Typography>
+                <LogoElement width={60} height={60}/>
               </Typography>
             </Box>
 
@@ -180,13 +189,30 @@ export default function Login() {
 
             <TextField
               label="Nhập mật khẩu"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               name="password"
               value={formData.password}
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.password && Boolean(helperTexts.password)}
               helperText={touched.password && helperTexts.password}
+
+              slotProps={{
+                input: {
+                  endAdornment:
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        onMouseUp={handleMouseUpPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff/> : <Visibility/>}
+                      </IconButton>
+                    </InputAdornment>
+                }
+              }}
             />
 
             {/* Remember me checkbox */}

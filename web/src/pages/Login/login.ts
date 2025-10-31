@@ -2,7 +2,7 @@ import {useState} from "react";
 import {validateEmail, validatePassword} from "../../components";
 import {type FormErrors, getUserInfo, type LoginForm, postMethod} from "../../utils"
 import {toast} from "react-toastify";
-import * as React from "react";
+import {type MouseEvent} from "react";
 import {useNavigate} from "react-router";
 import {setCookie} from "../../stores";
 
@@ -48,6 +48,17 @@ export function useLogin() {
     setHelperTexts(prev => ({ ...prev, [name]: error }));
     return !error;
   }
+
+  /************** show - hide password *****************/
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword((show: boolean) => !show);
+
+  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+  const handleMouseUpPassword = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
 
   /************** Event handlers **************/
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,5 +136,9 @@ export function useLogin() {
     rememberMe,
     touched,
     isLoading,
+    showPassword,
+    handleClickShowPassword,
+    handleMouseDownPassword,
+    handleMouseUpPassword
   }
 }
