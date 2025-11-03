@@ -46,7 +46,9 @@ export class ForgotPasswordService {
 
     // Check if user email exists or not
     const user = await this.userService.findOneBy({ email });
-    if (!user) return primaryResponse;
+    if (!user) {
+      throw new NotFoundException('Email not registered');
+    }
 
     // Cancel old unsend tokens
     await this.passwordResetTokenRepository.update(

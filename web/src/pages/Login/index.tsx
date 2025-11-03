@@ -1,6 +1,5 @@
 import {Box, Button, Checkbox, Stack, Typography, Paper, Link, TextField, InputAdornment, IconButton} from "@mui/material";
 import {NavLink} from "react-router";
-// import { FloatingInput } from "../../components";
 import {useLogin} from "./login.ts";
 import {LogoElement} from "../../components";
 import {Visibility, VisibilityOff } from "@mui/icons-material";
@@ -74,9 +73,7 @@ export default function Login() {
               mt: 12,
             }}
           />
-          <Box
-            sx={{}}
-          >
+          <Box>
             <Typography
               variant="h5"
               fontWeight="bold"
@@ -216,24 +213,40 @@ export default function Login() {
             />
 
             {/* Remember me checkbox */}
-            <Box display="flex" alignItems="center" mt={1} mb={3}>
-              <Checkbox
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
+            <Box display="flex" alignItems="center" justifyContent={'space-between'} mt={1} mb={3}>
+              <Box display='flex' alignItems="center">
+                <Checkbox
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  sx={{
+                    padding: "8px",
+                  }}
+                />
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "black",
+                    fontSize: "0.9rem",
+                  }}
+                >
+                  Ghi nhớ đăng nhập
+                </Typography>
+              </Box>
+
+              <Link
+                component={NavLink}
+                to="/forgot-password"
                 sx={{
-                  padding: "8px",
-                }}
-              />
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "black",
                   fontSize: "0.9rem",
-                  ml: 1,
+                  cursor: "pointer",
+                  textDecoration: "none",
+                  '&:hover': {
+                    textDecoration: "underline"
+                  }
                 }}
               >
-                Ghi nhớ đăng nhập
-              </Typography>
+                Quên mật khẩu?
+              </Link>
             </Box>
 
             {/* Login button */}

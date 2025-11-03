@@ -22,7 +22,7 @@ import Typography from "@mui/material/Typography";
 import {Link, useNavigate} from "react-router";
 import {useClassPage} from "../../pages/Classes/classes.ts";
 import useHeader from "./header.ts";
-import {AvatarDefault} from "../index.tsx";
+import {AvatarDefault, LogoElement} from "../index.tsx";
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -92,10 +92,7 @@ export default () => {
     <Box>
       <Box sx={{p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <Box sx={{p: '10px'}}/>
-        <Box>
-          <img src="https://bk-exam-public.s3.ap-southeast-1.amazonaws.com/logo2.png"
-               alt="logo" width="40" height="40"/>
-        </Box>
+        <LogoElement width={60} height={60}/>
         <button onClick={handleDrawerToggle} style={{border: 'none', background: 'none', cursor: 'pointer'}}>
           <CloseIcon/>
         </button>
@@ -131,9 +128,8 @@ export default () => {
           <MenuIcon/>
         </IconButton>
 
-        <Box /*sx={{display: {xs: 'none', lg: 'block'}}}*/>
-          <img src="https://bk-exam-public.s3.ap-southeast-1.amazonaws.com/logo2.png"
-               alt="logo" width="40" height="40"/>
+        <Box sx={{display: {xs: 'none', lg: 'block'}}}>
+          <img src="/Logo.png" alt="logo" width="40" height="40"/>
         </Box>
 
         <Box className={"logo-text"}>

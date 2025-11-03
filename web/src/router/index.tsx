@@ -5,10 +5,12 @@ import ProtectedLayout from "./ProtectedLayout.tsx";
 import ExamFlowLayout from "./ExamFlowLayout.tsx";
 import StudentExamDetail from "../components/ExamGroup/Student/Page/examDetail.tsx";
 import {Register, ClassDetail, Classes, Login, Profile, Invite, NotFound} from "../pages";
+import ForgotPasswordStep1 from "../pages/ForgotPassword/step1.tsx";
+import ForgotPasswordStep2 from "../pages/ForgotPassword/step2.tsx";
 
 const router = createBrowserRouter([
   {
-    // errorElement: <NotFound/>,
+    errorElement: <NotFound/>,
     children: [
       // Public routes
       {
@@ -16,6 +18,8 @@ const router = createBrowserRouter([
         children: [
           {path: "/login", element: <Login/>},
           {path: "/register", element: <Register/>},
+          {path: "/forgot-password", element: <ForgotPasswordStep1/>},
+          {path: "/verify-newPassword", element: <ForgotPasswordStep2/>},
         ],
       },
 
